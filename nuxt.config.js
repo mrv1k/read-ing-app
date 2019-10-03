@@ -28,7 +28,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/composition-api'
   ],
+
   /*
   ** Nuxt.js dev-modules
   */
