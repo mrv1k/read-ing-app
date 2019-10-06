@@ -24,16 +24,16 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
+      required: true,
     },
     label: {
       type: String,
-      required: true
+      required: true,
     },
     value: {
       type: [String, Number],
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 }
 </script>

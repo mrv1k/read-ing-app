@@ -1,15 +1,18 @@
 import { shallowMount } from '@vue/test-utils'
-import DayInput from '@/components/DayInput.vue'
+import VInput from '@/components/VInput.vue'
 
-function factory (props) {
-  return shallowMount(DayInput, {
+function factory(props) {
+  return shallowMount(VInput, {
     propsData: {
-      id: 'id', label: 'label', value: '1', ...props
-    }
+      id: 'id',
+      label: 'label',
+      value: '1',
+      ...props,
+    },
   })
 }
 
-describe('DayInput', () => {
+describe('VInput', () => {
   describe('label', () => {
     it('should contain label', () => {
       const wrapper = factory()
