@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { computed, reactive } from '@vue/composition-api'
-import VInput from '@/components/VInput.vue'
+import { computed, reactive } from '@vue/composition-api';
+import VInput from '@/components/VInput.vue';
 
 export default {
   components: {
@@ -21,14 +21,14 @@ export default {
     const pages = reactive({
       start: 10,
       end: 30,
-    })
+    });
 
-    const pageCount = computed(() => pages.end - pages.start)
+    const pageCount = computed(() => pages.end - pages.start);
 
     return {
       pages,
       pageCount,
-    }
+    };
   },
-}
+};
 </script>

@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import DayEntry from '@/components/DayEntry.vue'
+import DayEntry from '@/components/DayEntry.vue';
 
 export default {
   components: {
-    DayEntry
-  }
-}
+    DayEntry,
+  },
+};
 </script>
 
 <style>
