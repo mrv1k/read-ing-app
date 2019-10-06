@@ -3,7 +3,12 @@
     <div class="flex flex-wrap -mx-3 mb-2">
       <DayInput id="pages-start" v-model="pages.start" label="Start Page" />
       <DayInput id="pages-end" v-model="pages.end" label="End Page" />
-      <DayInput id="pages-count" :value="pageCount" label="Pages Read" disabled />
+      <DayInput
+        id="pages-count"
+        :value="pageCount"
+        label="Pages Read"
+        disabled
+      />
     </div>
   </form>
 </template>
@@ -17,7 +22,7 @@ export default {
     DayInput
   },
 
-  setup () {
+  setup() {
     const pages = reactive({
       start: 10,
       end: 30

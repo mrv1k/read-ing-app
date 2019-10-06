@@ -13,7 +13,7 @@
       type="text"
       placeholder="322"
       @input="$emit('input', $event.target.value)"
-    >
+    />
   </div>
 </template>
 

@@ -28,5 +28,4 @@ export default {
   align-items: center;
   text-align: center;
 }
-
 </style>
