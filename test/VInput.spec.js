@@ -6,7 +6,7 @@ function factory(props) {
     propsData: {
       id: 'id',
       label: 'label',
-      value: '1',
+      value: '',
       ...props,
     },
   });

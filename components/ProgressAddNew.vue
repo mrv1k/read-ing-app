@@ -1,8 +1,12 @@
 <template>
   <form class="w-full max-w-lg">
     <div class="flex flex-wrap -mx-3 mb-2">
-      <VInput id="pages-start" v-model="pages.start" label="Start Page" />
-      <VInput id="pages-end" v-model="pages.end" label="End Page" />
+      <VInput
+        id="pages-start"
+        v-model.number="pages.start"
+        label="Start Page"
+      />
+      <VInput id="pages-end" v-model.number="pages.end" label="End Page" />
       <VInput id="pages-count" :value="pageCount" label="Pages Read" disabled />
     </div>
   </form>
@@ -17,13 +21,21 @@ export default {
     VInput,
   },
 
-  setup() {
+  setup(_, { root }) {
     const pages = reactive({
       start: 10,
       end: 30,
     });
+    const pageCount = computed(() => {
+      const count = pages.end - pages.start;
 
-    const pageCount = computed(() => pages.end - pages.start);
+      console.log('root', root);
+      console.log('store', root.$store);
+
+      root.$store.commit('challenge/SET_PROGRESS', count);
+
+      return count;
+    });
 
     return {
       pages,
