@@ -13,6 +13,11 @@ function factory(props) {
 }
 
 describe('VInput', () => {
+  it('is a Vue instance', () => {
+    const wrapper = factory();
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
+
   describe('label', () => {
     it('should contain label', () => {
       const wrapper = factory();

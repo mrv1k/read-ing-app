@@ -2,6 +2,11 @@ import { mount } from '@vue/test-utils';
 import BookAddNew from '@/components/BookAddNew.vue';
 
 describe('BookAddNew', () => {
+  it('is a Vue instance', () => {
+    const wrapper = mount(BookAddNew);
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
+
   it('should have title input', () => {
     const wrapper = mount(BookAddNew);
     const title = wrapper.find('input#book-title');
