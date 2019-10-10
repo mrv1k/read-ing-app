@@ -1,37 +1,28 @@
-import { mount, createLocalVue } from '@vue/test-utils';
-import Vuex from 'vuex';
-import SET_PROGRESS from '@/store/mutation-types';
+import { mount } from '@vue/test-utils';
 import ProgressAddNew from '@/components/ProgressAddNew.vue';
 
-const localVue = createLocalVue();
-localVue.use(Vuex);
-
-const factory = (store) => {
-  return mount(ProgressAddNew, { localVue, store });
-};
+function factory() {
+  return mount(ProgressAddNew, {
+    mocks: {
+      $store: {
+        commit: jest.fn(),
+      },
+    },
+  });
+}
 
 describe('ProgressAddNew', () => {
-  let store;
-
-  beforeEach(() => {
-    store = new Vuex.Store({
-      modules: {
-        challenge: {
-          namespaced: true,
-
-          mutations: {
-            [SET_PROGRESS]: jest.fn(),
-          },
-        },
-      },
-    });
+  it('is a Vue instance', () => {
+    const wrapper = factory();
+    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  it('is a Vue instance', () => {
-    const wrapper = factory(store);
+  it('should commit progress to vuex store', () => {
+    const wrapper = factory();
 
-    console.log(wrapper.vm.$store.state.challenge);
-
-    expect(wrapper.isVueInstance()).toBeTruthy();
+    expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+      'challenge/SET_PROGRESS',
+      expect.anything(),
+    );
   });
 });

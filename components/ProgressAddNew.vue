@@ -26,14 +26,10 @@ export default {
       start: 10,
       end: 30,
     });
+
     const pageCount = computed(() => {
       const count = pages.end - pages.start;
-
-      console.log('root', root);
-      console.log('store', root.$store);
-
       root.$store.commit('challenge/SET_PROGRESS', count);
-
       return count;
     });
 
