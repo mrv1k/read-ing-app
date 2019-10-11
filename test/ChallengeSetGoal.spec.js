@@ -19,18 +19,18 @@ describe('ChallengeSetGoal', () => {
 
   it('has an input to set a goal', () => {
     const wrapper = factory();
+
     const goalInput = wrapper.find('input#set-goal');
+
     expect(goalInput.exists()).toBeTruthy();
   });
 
-  it('commits goal to vuex store', (done) => {
+  it('commits goal to vuex store', () => {
     const wrapper = factory();
 
-    // expect(wrapper.vm.$store.commit).toHaveBeenCalled();
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
       'challenge/SET_GOAL',
       expect.anything(),
     );
-    wrapper.vm.$nextTick(() => done());
   });
 });
