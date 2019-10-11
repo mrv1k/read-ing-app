@@ -22,7 +22,9 @@ import { ref, watch } from '@vue/composition-api';
 export default {
   setup(_, { root }) {
     const goal = ref(25);
-    watch(() => root.$store.commit('challenge/SET_GOAL', goal.value));
+
+    // use watching source because vuex doesn't unwrap Ref and it bugs out with jest
+    watch(goal, (goal) => root.$store.commit('challenge/SET_GOAL', goal));
 
     return {
       goal,

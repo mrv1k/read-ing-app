@@ -17,7 +17,7 @@ describe('ProgressAddNew', () => {
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  it('should commit progress to vuex store', () => {
+  it('commits progress to vuex store', () => {
     const wrapper = factory();
 
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
