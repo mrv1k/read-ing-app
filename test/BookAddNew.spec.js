@@ -30,4 +30,14 @@ describe('BookAddNew', () => {
 
     expect(pages.exists()).toBeTruthy();
   });
+
+  it('should have a button to store book', () => {
+    const wrapper = mount(BookAddNew);
+
+    const button = wrapper.find('button');
+
+    expect(button.exists()).toBeTruthy();
+  });
+
+  it.skip('should notify user that book is recorded', () => {});
 });

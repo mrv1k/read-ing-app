@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="spacer"></div>
-    <div class="container">
-      <ProgressAddNew />
-    </div>
-    <div class="container">
-      <BookAddNew />
-    </div>
-    <div class="container">
-      <ProgressViewDay />
-    </div>
-    <div class="container">
-      <ChallengeSetGoal />
+    <div class="container mx-auto px-20 pt-20">
+      <div class="step-books">
+        <p>What book are you planning to read?</p>
+        <BookAddNew />
+      </div>
+      <div class="step-challenge">
+        <ChallengeSetGoal />
+      </div>
+      <div class="step-progress">
+        <ProgressAddNew />
+        <ProgressViewDay />
+      </div>
     </div>
   </div>
 </template>
@@ -38,15 +38,4 @@ export default {
   @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
-.spacer {
-  min-height: 33vh;
-}
-.container {
-  margin: 0 auto;
-  min-height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
 </style>
