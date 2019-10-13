@@ -1,9 +1,13 @@
 <template>
   <div class="w-full">
     <div class="inline-flex mb-2">
-      <VInput id="book-title" v-model="title" label="Book Title"></VInput>
-      <VInput id="book-author" v-model="author" label="Author"></VInput>
-      <VInput id="book-pages" v-model="pages" label="Page Count"></VInput>
+      <VInput id="book-title" v-model="book.title" label="Book Title"></VInput>
+      <VInput id="book-author" v-model="book.author" label="Author"></VInput>
+      <VInput
+        id="book-pages"
+        v-model.number="book.pages"
+        label="Page Count"
+      ></VInput>
 
       <div>
         <div class="invisible">spacer</div>
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api';
+import { reactive } from '@vue/composition-api';
 
 import VInput from '@/components/VInput.vue';
 
@@ -29,26 +33,24 @@ export default {
   },
 
   setup(_, { root }) {
-    const title = ref('Turning Pro');
-    const author = ref('Steven Pressfield');
-    const pages = ref(148);
+    const book = reactive({
+      title: 'Turning Pro',
+      author: 'Steven Pressfield',
+      pages: 148,
+    });
 
-    const addBook = () => {
-      root.$store.commit('challenge/ADD_BOOK', {
-        title: title.value,
-        author: author.value,
-        pages: pages.value,
+    const cleanInputs = () => {
+      Object.keys(book).forEach((field) => {
+        book[field] = '';
       });
-
-      title.value = '';
-      author.value = '';
-      pages.value = '';
+    };
+    const addBook = () => {
+      root.$store.commit('challenge/ADD_BOOK', book);
+      cleanInputs();
     };
 
     return {
-      title,
-      author,
-      pages,
+      book,
       addBook,
     };
   },

@@ -14,7 +14,7 @@ export const mutations = {
     state.progress = progress;
   },
   [ADD_BOOK](state, book) {
-    state.books.push(book);
+    state.books.push(Object.assign({}, book));
   },
 };
 
