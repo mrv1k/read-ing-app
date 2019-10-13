@@ -1,11 +1,11 @@
-import { ADD_BOOK } from './mutation-types';
+import { ADD_NEW_BOOK } from './mutation-types';
 
 export const state = () => ({
-  books: [],
+  list: [],
 });
 
 export const mutations = {
-  [ADD_BOOK](state, book) {
-    state.books.push(Object.assign({}, book));
+  [ADD_NEW_BOOK](state, book) {
+    state.list.push(Object.assign({}, book));
   },
 };

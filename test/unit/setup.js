@@ -11,6 +11,7 @@ VueTestUtils.config.stubs['no-ssr'] = '<span><slot /></span>';
  */
 const error = console.error;
 console.error = function(message) {
+  // Reminder: display only first line in VSCode Jest Extension
   error.apply(console, arguments);
   // NOTE: You can whitelist some `console.error` messages here
   // by returning if the `message` value is acceptable.
@@ -19,6 +20,7 @@ console.error = function(message) {
 
 const warn = console.warn;
 console.warn = function(message) {
+  // Reminder: display only first line in VSCode Jest Extension
   warn.apply(console, arguments);
   throw message instanceof Error ? message : new Error(message);
 };

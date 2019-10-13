@@ -2,4 +2,4 @@
 
 export const SET_GOAL = 'SET_GOAL';
 export const SET_PROGRESS = 'SET_PROGRESS';
-export const ADD_BOOK = 'ADD_BOOK';
+export const ADD_NEW_BOOK = 'ADD_NEW_BOOK';

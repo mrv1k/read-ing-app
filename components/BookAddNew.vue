@@ -45,7 +45,7 @@ export default {
       });
     };
     const addBook = () => {
-      root.$store.commit('books/ADD_BOOK', book);
+      root.$store.commit('books/ADD_NEW_BOOK', book);
       cleanInputs();
     };
 
