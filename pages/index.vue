@@ -1,17 +1,15 @@
 <template>
   <div>
-    <div class="container mx-auto px-20 pt-20">
-      <div class="step-books">
-        <p>What book are you planning to read?</p>
-        <BookAddNew />
-      </div>
-      <div class="step-challenge">
-        <ChallengeSetGoal />
-      </div>
-      <div class="step-progress">
-        <ProgressAddNew />
-        <ProgressViewDay />
-      </div>
+    <div class="step-books">
+      <p>What book are you planning to read?</p>
+      <BookAddNew />
+    </div>
+    <div class="step-challenge">
+      <ChallengeSetGoal />
+    </div>
+    <div class="step-progress">
+      <ProgressAddNew />
+      <ProgressViewDay />
     </div>
   </div>
 </template>
