@@ -5,7 +5,7 @@ export const state = () => ({
 });
 
 export const mutations = {
-  [ADD_NEW_BOOK](state, book) {
-    state.list.push(Object.assign({}, book));
+  [ADD_NEW_BOOK](state, { title, author, pages }) {
+    state.list.push({ title, author, pages });
   },
 };
