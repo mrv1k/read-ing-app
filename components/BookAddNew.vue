@@ -1,12 +1,20 @@
 <template>
   <div class="w-full">
     <div class="inline-flex mb-2">
-      <VInput id="book-title" v-model="book.title" label="Book Title"></VInput>
-      <VInput id="book-author" v-model="book.author" label="Author"></VInput>
+      <VInput
+        id="book-title"
+        v-model="book.title"
+        :label="headers.title"
+      ></VInput>
+      <VInput
+        id="book-author"
+        v-model="book.author"
+        :label="headers.author"
+      ></VInput>
       <VInput
         id="book-pages"
         v-model.number="book.pages"
-        label="Page Count"
+        :label="headers.pages"
       ></VInput>
 
       <div>
@@ -30,6 +38,13 @@ import VInput from '@/components/VInput.vue';
 export default {
   components: {
     VInput,
+  },
+
+  props: {
+    headers: {
+      type: Object,
+      required: true,
+    },
   },
 
   setup(_, { root }) {
