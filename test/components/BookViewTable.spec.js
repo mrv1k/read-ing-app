@@ -29,49 +29,79 @@ describe('BookViewTable', () => {
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  describe('table headers', () => {
-    const factoryStubComputed = (props, overrides) => {
-      return mount(BookViewTable, {
-        computed: {},
+  describe('headers', () => {
+    const factoryStubComputed = (props, overrides) =>
+      mount(BookViewTable, {
+        computed: { books: () => [] },
         propsData: { ...props },
         ...overrides,
       });
-    };
 
-    it('should render 3 rows: [title, author and pages]', () => {
+    it('has 3 rows', () => {
       const wrapper = factoryStubComputed(requiredPropsStub);
 
       const wrappers = wrapper.findAll('th').wrappers;
 
       expect(wrappers.length).toBe(3);
     });
-
-    it('uses headers prop to render headers text', () => {
+    // uses prop as header cells text
+    it('fills cells with prop values', () => {
       const props = {
         headers: { title: 'Title', author: 'Author', pages: 'Pages' },
       };
       const wrappers = factoryStubComputed(props).findAll('th').wrappers;
 
-      wrappers.forEach((header, index) => {
-        const headerValues = Object.values(props.headers);
-        expect(header.text()).toBe(headerValues[index]);
+      wrappers.forEach((header, i) => {
+        expect(header.text()).toBe(Object.values(props.headers)[i]);
       });
     });
   });
 
-  describe.skip('table rows', () => {
-    it('should render a table row for a book', () => {
-      const wrapper = factory({
-        computed: {
-          books() {
-            return [{ title: 'War and Peace', author: 'Leo', pages: 666 }];
-          },
-        },
-      });
+  describe('rows', () => {
+    const factoryWithComputed = (books = []) =>
+      factory({ computed: { books: () => books } });
 
-      const row = wrapper.find('tr');
+    it('renders a row for a book', () => {
+      const wrapper = factoryWithComputed([
+        { title: 'title', author: 'author', pages: 10 },
+      ]);
+
+      const row = wrapper.find('tbody > tr');
 
       expect(row.exists()).toBeTruthy();
+    });
+
+    it('renders 2 rows for 2 books', () => {
+      const books = [
+        { title: 'title', author: 'author', pages: '10' },
+        { title: 'Do the Work', author: 'Steven Pressfield', pages: 94 },
+      ];
+
+      const wrapper = factoryWithComputed(books);
+      const rows = wrapper.findAll('tbody > tr').wrappers;
+
+      expect(rows.length).toBe(2);
+    });
+
+    it('has 3 cells', () => {
+      const wrapper = factoryWithComputed([
+        { title: 'title', author: 'author', pages: 10 },
+      ]);
+
+      const cells = wrapper.findAll('tbody > tr > td');
+
+      expect(cells.length).toBe(3);
+    });
+
+    it('fills cells with book values', () => {
+      const book = { title: 'title', author: 'author', pages: '10' };
+
+      const wrapper = factoryWithComputed([book]);
+      const cells = wrapper.findAll('tbody > tr > td');
+
+      cells.wrappers.forEach((cell, i) => {
+        expect(cell.text()).toBe(Object.values(book)[i]);
+      });
     });
   });
 });
