@@ -9,5 +9,8 @@
     }
   },
   "exclude": ["node_modules", "**/node_modules/*", ".nuxt", "dist"],
-  "typeAcquisition": {"include": ["jest"]}
+  "typeAcquisition": {
+    "include": ["jest"],
+    "exclude": ["date-fns"]
+  }
 }
