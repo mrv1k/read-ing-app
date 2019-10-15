@@ -83,6 +83,18 @@ describe('BookViewTable', () => {
       expect(rows.length).toBe(2);
     });
 
+    it('adds background class to every 2nd book', () => {
+      const books = [
+        { title: 'title', author: 'author', pages: '10' },
+        { title: 'Do the Work', author: 'Steven Pressfield', pages: 94 },
+      ];
+
+      const wrapper = factoryWithComputed(books);
+      const secondRow = wrapper.findAll('tbody > tr').at(1);
+
+      expect(secondRow.html()).toContain('bg-gray-100');
+    });
+
     it('has 3 cells', () => {
       const wrapper = factoryWithComputed([
         { title: 'title', author: 'author', pages: 10 },
