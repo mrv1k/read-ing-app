@@ -14,14 +14,10 @@
 </template>
 
 <script>
-import ProgressAddNew from '@/components/ProgressAddNew.vue';
-import ProgressViewDay from '@/components/ProgressViewDay.vue';
 import ChallengeSetGoal from '@/components/ChallengeSetGoal.vue';
 
 export default {
   components: {
-    ProgressAddNew,
-    ProgressViewDay,
     ChallengeSetGoal,
   },
 };

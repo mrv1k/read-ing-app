@@ -1,6 +1,6 @@
 <template>
   <form class="w-full max-w-lg">
-    <div class="flex flex-wrap -mx-3 mb-2">
+    <div class="flex -mx-3 mb-2">
       <VInput id="pages-start" v-model.number="start" label="Start Page" />
       <VInput id="pages-end" v-model.number="end" label="End Page" />
       <VInput id="pages-read" :value="pagesRead" label="Pages Read" disabled />

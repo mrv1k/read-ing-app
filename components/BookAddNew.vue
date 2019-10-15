@@ -62,6 +62,12 @@ export default {
     const addBook = () => {
       root.$store.commit('books/ADD_NEW_BOOK', book);
       cleanInputs();
+
+      if (process.env.NODE_ENV === 'development') {
+        book.title = 'dev';
+        book.author = 'vutya';
+        book.pages = 322;
+      }
     };
 
     return {
