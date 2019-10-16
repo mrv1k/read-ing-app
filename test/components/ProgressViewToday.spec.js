@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import ProgressViewDay from '@/components/ProgressViewDay.vue';
+import ProgressViewToday from '@/components/ProgressViewToday.vue';
 
-describe('ProgressViewDay', () => {
+describe('ProgressViewToday', () => {
   it('is a Vue instance', () => {
-    const wrapper = mount(ProgressViewDay, {
+    const wrapper = mount(ProgressViewToday, {
       mocks: {
         $store: {
           getters: {
