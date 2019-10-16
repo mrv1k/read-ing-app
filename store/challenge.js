@@ -15,7 +15,7 @@ export const mutations = {
 };
 
 export const getters = {
-  goalStatus(state) {
+  goalStatusForToday(state) {
     return state.progress >= state.goal;
   },
 };

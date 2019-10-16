@@ -8,7 +8,6 @@
     </div>
     <div class="step-progress">
       <ProgressAddNew />
-      <ProgressViewDay />
     </div>
   </div>
 </template>
