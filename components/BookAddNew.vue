@@ -60,7 +60,8 @@ export default {
       });
     };
     const addBook = () => {
-      root.$store.commit('books/ADD_NEW_BOOK', book);
+      const unobserv = { ...book };
+      root.$store.commit('books/ADD_NEW_BOOK', unobserv);
       cleanInputs();
 
       if (process.env.NODE_ENV === 'development') {
