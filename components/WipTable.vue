@@ -14,30 +14,20 @@
     </thead>
     <tbody>
       <tr>
-        <td class="border">
-          <span v-text="today.day"></span>
-        </td>
-        <td class="border">
-          <span>{{ today.day }} {{ today.month }}</span>
-        </td>
-        <td class="border text-left">
-          <input v-model="reading.start" class="w-8" />
-        </td>
-        <td class="border text-left">
-          <input v-model="reading.end" class="w-8" />
-        </td>
-        <td class="border text-left">
-          <span v-text="readingProgress"></span>
-        </td>
-        <td class="border text-left">
-          <input v-model="book.title" />
-        </td>
-        <td class="border text-left">
-          <input v-model="book.pages" class="w-10" />
-        </td>
-        <td class="border text-left">
-          <span v-text="bookReadingProgress"></span>
-        </td>
+        <WipTableCell>{{ today.day }}</WipTableCell>
+        <WipTableCell>{{ today.day }} {{ today.month }}</WipTableCell>
+        <WipTableInput v-model.number="reading.start"></WipTableInput>
+        <WipTableInput v-model.number="reading.end"></WipTableInput>
+        <WipTableCell>{{ readingProgress }}</WipTableCell>
+        <WipTableInput
+          v-model.number="book.title"
+          input-class="w-auto"
+        ></WipTableInput>
+        <WipTableInput
+          v-model.number="book.pages"
+          input-class="w-10"
+        ></WipTableInput>
+        <WipTableCell>{{ bookReadingProgress }}</WipTableCell>
       </tr>
     </tbody>
   </table>
@@ -47,7 +37,14 @@
 import { reactive, computed } from '@vue/composition-api';
 import { format } from 'date-fns';
 
+import WipTableCell from '@/components/WipTableCell.vue';
+import WipTableInput from '@/components/WipTableInput.vue';
+
 export default {
+  components: {
+    WipTableCell,
+    WipTableInput,
+  },
   setup() {
     const book = reactive({
       title: 'DTW by Steven',
