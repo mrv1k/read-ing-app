@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr class="today-row">
         <WipTableCell>{{ today.day }}</WipTableCell>
         <WipTableCell>{{ today.day }} {{ today.month }}</WipTableCell>
         <WipTableInput v-model.number="reading.start"></WipTableInput>
@@ -29,13 +29,30 @@
         ></WipTableInput>
         <WipTableCell>{{ bookReadingProgress }}</WipTableCell>
       </tr>
+
+      <tr>
+        <WipTableCell>{{ tomorrow.day }}</WipTableCell>
+        <WipTableCell>{{ tomorrow.day }} {{ tomorrow.month }}</WipTableCell>
+        <WipTableInput v-model.number="tomorrowReading.start"></WipTableInput>
+        <WipTableInput v-model.number="tomorrowReading.end"></WipTableInput>
+        <WipTableCell>{{ tomorrowReadingProgress }}</WipTableCell>
+        <WipTableInput
+          v-model.number="tomorrowBook.title"
+          input-class="w-auto"
+        ></WipTableInput>
+        <WipTableInput
+          v-model.number="tomorrowBook.pages"
+          input-class="w-10"
+        ></WipTableInput>
+        <WipTableCell>{{ tomorrowBookReadingProgress }}</WipTableCell>
+      </tr>
     </tbody>
   </table>
 </template>
 
 <script>
 import { reactive, computed } from '@vue/composition-api';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 
 import WipTableCell from '@/components/WipTableCell.vue';
 import WipTableInput from '@/components/WipTableInput.vue';
@@ -45,23 +62,8 @@ export default {
     WipTableCell,
     WipTableInput,
   },
+
   setup() {
-    const book = reactive({
-      title: 'DTW by Steven',
-      pages: 200,
-    });
-
-    const reading = reactive({
-      start: 1,
-      end: 26,
-    });
-    const readingProgress = computed(() => reading.end - reading.start);
-
-    const RATIO = 100;
-    const bookReadingProgress = computed(() =>
-      Math.floor((readingProgress.value / book.pages) * RATIO),
-    );
-
     const date = new Date();
     const today = computed(() => {
       return {
@@ -70,12 +72,60 @@ export default {
       };
     });
 
+    const tomorrow = computed(() => {
+      return {
+        month: format(addDays(date, 1), 'MMMM'),
+        day: format(addDays(date, 1), 'dd'),
+      };
+    });
+
+    const reading = reactive({
+      start: 1,
+      end: 26,
+    });
+    const readingProgress = computed(() => reading.end - reading.start);
+
+    const tomorrowReading = reactive({
+      start: 1,
+      end: 26,
+    });
+    const tomorrowReadingProgress = computed(
+      () => tomorrowReading.end - tomorrowReading.start,
+    );
+
+    const book = reactive({
+      title: 'DTW by Steven',
+      pages: 200,
+    });
+    const tomorrowBook = reactive({
+      title: 'DTW by Steven',
+      pages: 200,
+    });
+
+    const RATIO = 100;
+    const percentOutOf = (value, outOf) =>
+      Math.floor((readingProgress.value / book.pages) * RATIO);
+
+    const bookReadingProgress = computed(() =>
+      percentOutOf(readingProgress.value, book.pages),
+    );
+
+    const tomorrowBookReadingProgress = computed(() =>
+      percentOutOf(tomorrowReadingProgress.value, tomorrowBook.pages),
+    );
+
     return {
       book,
+      bookReadingProgress,
       reading,
       readingProgress,
-      bookReadingProgress,
       today,
+
+      tomorrowBook,
+      tomorrowBookReadingProgress,
+      tomorrowReading,
+      tomorrowReadingProgress,
+      tomorrow,
     };
   },
 };
