@@ -13,17 +13,22 @@
       </tr>
     </thead>
     <tbody>
-      <WipTableRow :day="today.day" :month="today.month" />
-      <WipTableRow :day="tomorrow.day" :month="tomorrow.month" />
+      <WipTableRow
+        v-for="day in monthDays"
+        :key="`${monthName}-${day}`"
+        :day="day"
+        :month-name="monthName"
+      />
     </tbody>
   </table>
 </template>
 
 <script>
 import { computed } from '@vue/composition-api';
-import { format, addDays } from 'date-fns';
+import { format, getDaysInMonth } from 'date-fns';
 
 import WipTableRow from '@/components/WipTableRow.vue';
+import { initializeArrayWithPaddedRange } from '@/utils/dates';
 
 export default {
   components: {
@@ -32,24 +37,19 @@ export default {
 
   setup() {
     const date = new Date();
+    const daysInMonth = getDaysInMonth(date);
 
-    const today = computed(() => {
-      return {
-        month: format(date, 'MMM'),
-        day: format(date, 'dd'),
-      };
-    });
+    const monthDays = computed(() =>
+      initializeArrayWithPaddedRange(daysInMonth),
+    );
 
-    const tomorrow = computed(() => {
-      return {
-        month: format(addDays(date, 1), 'MMM'),
-        day: format(addDays(date, 1), 'dd'),
-      };
-    });
+    const monthName = computed(() => format(date, 'MMM'));
+    const day = computed(() => format(date, 'dd'));
 
     return {
-      today,
-      tomorrow,
+      day,
+      monthName,
+      monthDays,
     };
   },
 };

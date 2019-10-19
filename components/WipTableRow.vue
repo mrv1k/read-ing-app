@@ -1,7 +1,7 @@
 <template>
   <tr>
     <WipTableCell>{{ day }}</WipTableCell>
-    <WipTableCell>{{ day }} {{ month }}</WipTableCell>
+    <WipTableCell>{{ day }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="reading.start"></WipTableInput>
     <WipTableInput v-model.number="reading.end"></WipTableInput>
     <WipTableCell>{{ reading.progress }}</WipTableCell>
@@ -33,7 +33,7 @@ export default {
       type: String,
       required: true,
     },
-    month: {
+    monthName: {
       type: String,
       required: true,
     },
