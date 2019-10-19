@@ -9,7 +9,7 @@
         <th class="border text-left">Progress</th>
         <th class="border text-left">Book</th>
         <th class="border text-left">Pages</th>
-        <th class="border text-left">Read %</th>
+        <th class="border text-left">Completed %</th>
       </tr>
     </thead>
     <tbody>
@@ -18,7 +18,7 @@
         <WipTableCell>{{ today.day }} {{ today.month }}</WipTableCell>
         <WipTableInput v-model.number="reading.start"></WipTableInput>
         <WipTableInput v-model.number="reading.end"></WipTableInput>
-        <WipTableCell>{{ readingProgress }}</WipTableCell>
+        <WipTableCell>{{ reading.progress }}</WipTableCell>
         <WipTableInput
           v-model.number="book.title"
           input-class="w-auto"
@@ -27,7 +27,7 @@
           v-model.number="book.pages"
           input-class="w-10"
         ></WipTableInput>
-        <WipTableCell>{{ bookReadingProgress }}</WipTableCell>
+        <WipTableCell>{{ book.completion }}</WipTableCell>
       </tr>
 
       <tr>
@@ -35,7 +35,7 @@
         <WipTableCell>{{ tomorrow.day }} {{ tomorrow.month }}</WipTableCell>
         <WipTableInput v-model.number="tomorrowReading.start"></WipTableInput>
         <WipTableInput v-model.number="tomorrowReading.end"></WipTableInput>
-        <WipTableCell>{{ tomorrowReadingProgress }}</WipTableCell>
+        <WipTableCell>{{ tomorrowReading.progress }}</WipTableCell>
         <WipTableInput
           v-model.number="tomorrowBook.title"
           input-class="w-auto"
@@ -44,7 +44,7 @@
           v-model.number="tomorrowBook.pages"
           input-class="w-10"
         ></WipTableInput>
-        <WipTableCell>{{ tomorrowBookReadingProgress }}</WipTableCell>
+        <WipTableCell>{{ tomorrowBook.completion }}</WipTableCell>
       </tr>
     </tbody>
   </table>
@@ -71,7 +71,6 @@ export default {
         day: format(date, 'dd'),
       };
     });
-
     const tomorrow = computed(() => {
       return {
         month: format(addDays(date, 1), 'MMMM'),
@@ -82,49 +81,39 @@ export default {
     const reading = reactive({
       start: 1,
       end: 26,
+      progress: computed(() => reading.end - reading.start),
     });
-    const readingProgress = computed(() => reading.end - reading.start);
-
     const tomorrowReading = reactive({
-      start: 1,
-      end: 26,
+      start: reading.end,
+      end: reading.end,
+      progress: computed(() => tomorrowReading.end - tomorrowReading.start),
     });
-    const tomorrowReadingProgress = computed(
-      () => tomorrowReading.end - tomorrowReading.start,
-    );
+
+    const RATIO = 100;
+    const percentOutOf = (value, outOf) => Math.floor((value / outOf) * RATIO);
 
     const book = reactive({
       title: 'DTW by Steven',
       pages: 200,
+      completion: computed(() => percentOutOf(reading.progress, book.pages)),
     });
     const tomorrowBook = reactive({
       title: 'DTW by Steven',
       pages: 200,
+      completion: computed(() => {
+        let t = book.completion > 0 ? book.completion : 0;
+        t += percentOutOf(tomorrowReading.progress, tomorrowBook.pages);
+        return t;
+      }),
     });
-
-    const RATIO = 100;
-    const percentOutOf = (value, outOf) =>
-      Math.floor((readingProgress.value / book.pages) * RATIO);
-
-    const bookReadingProgress = computed(() =>
-      percentOutOf(readingProgress.value, book.pages),
-    );
-
-    const tomorrowBookReadingProgress = computed(() =>
-      percentOutOf(tomorrowReadingProgress.value, tomorrowBook.pages),
-    );
 
     return {
       book,
-      bookReadingProgress,
       reading,
-      readingProgress,
       today,
 
       tomorrowBook,
-      tomorrowBookReadingProgress,
       tomorrowReading,
-      tomorrowReadingProgress,
       tomorrow,
     };
   },
