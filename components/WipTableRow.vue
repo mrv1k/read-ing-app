@@ -1,6 +1,8 @@
 <template>
-  <tr :class="isToday ? 'border-t-2 border-b-2 border-gray-600' : ''">
-    <WipTableCell>{{ day }}</WipTableCell>
+  <tr :class="{ 'border-t-2 border-b-2 border-gray-600': isToday }">
+    <WipTableCell :class="{ 'bg-green-500': challengeIsCompleted }">
+      {{ day }}
+    </WipTableCell>
     <WipTableCell>{{ day }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="reading.start"></WipTableInput>
     <WipTableInput v-model.number="reading.end"></WipTableInput>
@@ -41,6 +43,11 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    challengeGoal: {
+      type: Number,
+      required: true,
+    },
   },
 
   setup(props) {
@@ -59,9 +66,14 @@ export default {
       completion: computed(() => percentOutOf(reading.progress, book.pages)),
     });
 
+    const challengeIsCompleted = computed(() => {
+      return reading.progress >= props.challengeGoal;
+    });
+
     return {
       reading,
       book,
+      challengeIsCompleted,
     };
   },
 };
