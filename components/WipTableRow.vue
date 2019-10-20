@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr :class="isToday ? 'border-t-2 border-b-2 border-gray-600' : ''">
     <WipTableCell>{{ day }}</WipTableCell>
     <WipTableCell>{{ day }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="reading.start"></WipTableInput>
@@ -36,6 +36,10 @@ export default {
     monthName: {
       type: String,
       required: true,
+    },
+    isToday: {
+      type: Boolean,
+      default: false,
     },
   },
 

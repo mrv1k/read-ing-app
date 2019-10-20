@@ -1,5 +1,5 @@
 <template>
-  <table class="table-auto">
+  <table class="table-auto border-collapse">
     <thead>
       <tr>
         <th class="border text-left">Day</th>
@@ -17,6 +17,7 @@
         v-for="day in monthDays"
         :key="`${monthName}-${day}`"
         :day="day"
+        :is-today="isToday(day)"
         :month-name="monthName"
       />
     </tbody>
@@ -42,12 +43,14 @@ export default {
     const monthDays = computed(() =>
       initializeArrayWithPaddedRange(daysInMonth),
     );
-
     const monthName = computed(() => format(date, 'MMM'));
-    const day = computed(() => format(date, 'dd'));
+
+    const today = format(date, 'dd');
+    const isToday = (day) => day === today;
 
     return {
-      day,
+      isToday,
+
       monthName,
       monthDays,
     };

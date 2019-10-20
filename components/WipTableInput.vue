@@ -1,6 +1,7 @@
 <template>
   <td class="border">
     <input
+      class="bg-white focus:outline-none focus:shadow-outline appearance-none leading-normal"
       :value="value"
       v-bind="$attrs"
       :class="inputClass"
