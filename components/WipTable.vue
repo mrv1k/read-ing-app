@@ -40,7 +40,7 @@ import { computed, ref } from '@vue/composition-api';
 import { format, getDaysInMonth } from 'date-fns';
 
 import WipTableRow from '@/components/WipTableRow.vue';
-import { initializeArrayWithPaddedRange } from '@/utils/dates';
+import { initializeArrayWithPaddedRange } from '@/utils/helpers';
 
 export default {
   components: {

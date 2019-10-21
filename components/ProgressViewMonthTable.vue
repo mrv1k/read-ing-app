@@ -37,7 +37,7 @@
 import { format, getDaysInMonth } from 'date-fns';
 
 // import ProgressAddNew from '@/components/ProgressAddNew.vue';
-import { initializeArrayWithPaddedRange } from '@/utils/dates';
+import { initializeArrayWithPaddedRange } from '@/utils/helpers';
 
 export default {
   components: {

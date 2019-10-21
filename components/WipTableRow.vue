@@ -21,6 +21,7 @@
 
 <script>
 import { computed, reactive } from '@vue/composition-api';
+import { percentage } from '@/utils/helpers';
 import WipTableCell from '@/components/WipTableCell.vue';
 import WipTableInput from '@/components/WipTableInput.vue';
 
@@ -57,13 +58,10 @@ export default {
       progress: computed(() => reading.end - reading.start),
     });
 
-    const RATIO = 100;
-    const percentOutOf = (value, outOf) => Math.floor((value / outOf) * RATIO);
-
     const book = reactive({
       title: 'DTW by Steven',
       pages: 200,
-      completion: computed(() => percentOutOf(reading.progress, book.pages)),
+      completion: computed(() => percentage(reading.progress, book.pages)),
     });
 
     const challengeIsCompleted = computed(() => {
