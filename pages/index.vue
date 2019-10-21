@@ -6,9 +6,6 @@
     <div class="step-challenge">
       <ChallengeSetGoal />
     </div>
-    <div class="step-progress">
-      <ProgressAddNew />
-    </div>
   </div>
 </template>
 
