@@ -4,8 +4,9 @@ import { ADD_NEW_BOOK } from './mutation-types';
 export const state = () => ({});
 
 export const mutations = {
-  // copy is created before payload
   /**
+   * Add top level prop to book state
+   * @description Payload must be plain JS object (non reactive)
    * @param {Object} state - books state
    * @param {Object} payload - book payload
    * @param {String} payload.title

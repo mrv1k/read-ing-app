@@ -51,17 +51,41 @@ export default {
     },
   },
 
-  setup(props) {
+  watch: {
+    // FIXME: why compose api watch fires for every component and doesnt stay local
+    'reading.start'(value) {
+      this.$store.commit('month/UPDATE_READING_START', {
+        day: this.day,
+        page: value,
+      });
+    },
+  },
+
+  setup(props, { root, emit }) {
+    // const { $store } = root;
+
     const reading = reactive({
-      start: 1,
-      end: 26,
-      progress: computed(() => reading.end - reading.start),
+      start: 0,
+      end: null,
+      progress: computed(() =>
+        reading.end ? reading.end - reading.start : '',
+      ),
     });
+    // watch(() => {
+    //   console.log(reading.start);
+
+    //   $store.commit('month/UPDATE_READING_START', {
+    //     day: props.day,
+    //     data: reading.start,
+    //   });
+    // });
 
     const book = reactive({
       title: 'DTW by Steven',
       pages: 200,
-      completion: computed(() => percentage(reading.progress, book.pages)),
+      completion: computed(() =>
+        reading.end ? `${percentage(reading.progress, book.pages)}%` : '',
+      ),
     });
 
     const challengeIsCompleted = computed(() => {

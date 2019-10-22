@@ -9,7 +9,7 @@
         <th class="border text-left">Progress</th>
         <th class="border text-left">Book</th>
         <th class="border text-left">Pages</th>
-        <th class="border text-left">Completed %</th>
+        <th class="border text-left">Completed</th>
       </tr>
     </thead>
     <tbody>
@@ -27,10 +27,11 @@
 
 <script>
 import { computed } from '@vue/composition-api';
-import { format, getDaysInMonth } from 'date-fns';
+import { format } from 'date-fns';
+// import { format, getDaysInMonth } from 'date-fns';
 
 import WipTableRow from '@/components/WipTableRow.vue';
-import { initializeArrayWithPaddedRange } from '@/utils/helpers';
+// import { initializeArrayWithPaddedRange } from '@/utils/helpers';
 
 export default {
   components: {
@@ -48,9 +49,10 @@ export default {
     const date = new Date();
     const monthName = computed(() => format(date, 'MMM'));
 
-    const daysInMonth = getDaysInMonth(date);
-    const monthDays = computed(() =>
-      initializeArrayWithPaddedRange(daysInMonth),
+    // const daysInMonth = getDaysInMonth(date);
+    const monthDays = computed(
+      () => ['21', '22', '23'],
+      // initializeArrayWithPaddedRange(daysInMonth),
     );
 
     const today = format(date, 'dd');
