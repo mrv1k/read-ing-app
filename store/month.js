@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import { UPDATE_READING_START } from './mutation-types';
 
-const wipTableStub = ['21', '22', '23'];
+const wipTableStub = ['21', '22', '23', '24'];
 
 const generatedState = {};
+
 wipTableStub.forEach((day) => {
   Vue.set(generatedState, day, {
     reading: {
@@ -11,6 +12,17 @@ wipTableStub.forEach((day) => {
       end: null,
     },
   });
+});
+
+Vue.set(generatedState, '21', {
+  reading: {
+    start: 1,
+    end: 26,
+  },
+  book: {
+    title: "Yesterday's book",
+    pages: 322,
+  },
 });
 
 const state = () => generatedState;

@@ -54,8 +54,11 @@ export default {
   setup(props, { root, emit }) {
     const { $store } = root;
 
+    const yesterday = (Number(props.day) - 1).toString();
+    const yesterdayState = $store.state.month[yesterday];
+
     const { book } = useBook();
-    const { reading } = useReading(props, $store);
+    const { reading } = useReading(props, $store, yesterdayState);
 
     const bookReadingProgress = computed(() =>
       reading.end ? `${percentage(reading.progress, book.pages)}%` : '',
@@ -74,9 +77,16 @@ export default {
   },
 };
 
-function useReading(props, $store) {
+function useReading(props, $store, yesterdayState) {
+  let start = 0;
+
+  if (yesterdayState) {
+    start = yesterdayState.reading.end;
+    console.log('derp', props.day, start);
+  }
+
   const reading = reactive({
-    start: 0,
+    start,
     end: null,
     progress: computed(() => (reading.end ? reading.end - reading.start : '')),
   });

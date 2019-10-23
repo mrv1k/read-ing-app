@@ -51,7 +51,7 @@ export default {
 
     // const daysInMonth = getDaysInMonth(date);
     const monthDays = computed(
-      () => ['21', '22', '23'],
+      () => ['21', '22', '23', '24'],
       // initializeArrayWithPaddedRange(daysInMonth),
     );
 
