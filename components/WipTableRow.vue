@@ -15,12 +15,12 @@
       v-model.number="book.pages"
       input-class="w-10"
     ></WipTableInput>
-    <WipTableCell>{{ book.completion }}</WipTableCell>
+    <WipTableCell>{{ bookReadingProgress }}</WipTableCell>
   </tr>
 </template>
 
 <script>
-import { computed, reactive } from '@vue/composition-api';
+import { computed, reactive, watch } from '@vue/composition-api';
 import { percentage } from '@/utils/helpers';
 import WipTableCell from '@/components/WipTableCell.vue';
 import WipTableInput from '@/components/WipTableInput.vue';
@@ -51,52 +51,57 @@ export default {
     },
   },
 
-  watch: {
-    // FIXME: why compose api watch fires for every component and doesnt stay local
-    'reading.start'(value) {
-      this.$store.commit('month/UPDATE_READING_START', {
-        day: this.day,
-        page: value,
-      });
-    },
-  },
-
   setup(props, { root, emit }) {
-    // const { $store } = root;
+    const { $store } = root;
 
-    const reading = reactive({
-      start: 0,
-      end: null,
-      progress: computed(() =>
-        reading.end ? reading.end - reading.start : '',
-      ),
-    });
-    // watch(() => {
-    //   console.log(reading.start);
+    const { book } = useBook();
+    const { reading } = useReading(props, $store);
 
-    //   $store.commit('month/UPDATE_READING_START', {
-    //     day: props.day,
-    //     data: reading.start,
-    //   });
-    // });
-
-    const book = reactive({
-      title: 'DTW by Steven',
-      pages: 200,
-      completion: computed(() =>
-        reading.end ? `${percentage(reading.progress, book.pages)}%` : '',
-      ),
-    });
+    const bookReadingProgress = computed(() =>
+      reading.end ? `${percentage(reading.progress, book.pages)}%` : '',
+    );
 
     const challengeIsCompleted = computed(() => {
       return reading.progress >= props.challengeGoal;
     });
 
     return {
+      bookReadingProgress,
       reading,
       book,
       challengeIsCompleted,
     };
   },
 };
+
+function useReading(props, $store) {
+  const reading = reactive({
+    start: 0,
+    end: null,
+    progress: computed(() => (reading.end ? reading.end - reading.start : '')),
+  });
+
+  watch(
+    () => reading.start,
+    (v) => {
+      $store.commit('month/UPDATE_READING_START', {
+        day: props.day,
+        page: v,
+      });
+    },
+    // lazy option only works when using the getter + callback format (c) docs
+    { lazy: true },
+  );
+
+  return { reading };
+}
+
+function useBook() {
+  const book = reactive({
+    title: 'DTW by Steven',
+    pages: 200,
+  });
+
+  return { book };
+}
 </script>
