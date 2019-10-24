@@ -7,10 +7,7 @@
     <WipTableInput v-model.number="reading.start"></WipTableInput>
     <WipTableInput v-model.number="reading.end"></WipTableInput>
     <WipTableCell>{{ reading.progress }}</WipTableCell>
-    <WipTableInput
-      v-model.number="book.title"
-      input-class="w-auto"
-    ></WipTableInput>
+    <WipTableInput v-model="book.title" input-class="w-auto"></WipTableInput>
     <WipTableInput
       v-model.number="book.pages"
       input-class="w-10"
@@ -54,15 +51,19 @@ export default {
   setup(props, { root, emit }) {
     const { $store } = root;
 
-    const yesterday = (Number(props.day) - 1).toString();
-    const yesterdayState = $store.state.month[yesterday];
+    const dayBefore = (Number(props.day) - 1).toString();
+    const state = {
+      day: $store.state.month[props.day],
+      dayBefore: $store.state.month[dayBefore],
+    };
 
     const { book } = useBook();
-    const { reading } = useReading(props, $store, yesterdayState);
+    const { reading } = useReading(props.day, $store, state);
 
-    const bookReadingProgress = computed(() =>
-      reading.end ? `${percentage(reading.progress, book.pages)}%` : '',
-    );
+    const bookReadingProgress = computed(() => {
+      if (reading.progress > 0 && !book.pages) return 'missing pages';
+      return reading.end ? `${percentage(reading.progress, book.pages)}%` : '';
+    });
 
     const challengeIsCompleted = computed(() => {
       return reading.progress >= props.challengeGoal;
@@ -77,39 +78,40 @@ export default {
   },
 };
 
-function useReading(props, $store, yesterdayState) {
-  let start = 0;
-
-  if (yesterdayState) {
-    start = yesterdayState.reading.end;
-    console.log('derp', props.day, start);
-  }
-
+function useReading(day, $store, state) {
   const reading = reactive({
-    start,
-    end: null,
+    start: state.day.reading.start,
+    end: state.day.reading.end,
     progress: computed(() => (reading.end ? reading.end - reading.start : '')),
   });
 
   watch(
     () => reading.start,
-    (v) => {
-      $store.commit('month/UPDATE_READING_START', {
-        day: props.day,
-        page: v,
-      });
-    },
-    // lazy option only works when using the getter + callback format (c) docs
+    (page) => $store.commit('month/UPDATE_READING_START', { day, page }),
+    { lazy: true },
+  );
+
+  if (canContinueReading(state.dayBefore)) {
+    reading.start = state.dayBefore.reading.end;
+  }
+
+  watch(
+    () => reading.end,
+    (page) => $store.commit('month/UPDATE_READING_END', { day, page }),
     { lazy: true },
   );
 
   return { reading };
 }
 
+const canContinueReading = (dayBefore) => {
+  return dayBefore && dayBefore.reading.end;
+};
+
 function useBook() {
   const book = reactive({
-    title: 'DTW by Steven',
-    pages: 200,
+    title: null,
+    pages: null,
   });
 
   return { book };
