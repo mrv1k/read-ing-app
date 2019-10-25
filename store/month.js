@@ -11,21 +11,29 @@ wipTableStub.forEach((day) => {
       start: null,
       end: null,
     },
+    book: {
+      title: null,
+      pages: null,
+    },
   });
 });
 
+const book = {
+  title: "Yesterday's book",
+  pages: 322,
+};
 Vue.set(generatedState, '21', {
-  reading: {
-    start: 1,
-    end: 26,
-  },
-  // book: {
-  //   title: "Yesterday's book",
-  //   pages: 322,
-  // },
+  reading: { start: 1, end: 26 },
+  book,
 });
-
-// generatedState['23'].reading.end = 55;
+Vue.set(generatedState, '22', {
+  reading: { start: 26, end: 51 },
+  book,
+});
+Vue.set(generatedState, '22', {
+  reading: { start: 51, end: 76 },
+  book,
+});
 
 const state = () => generatedState;
 
@@ -36,9 +44,6 @@ const mutations = {
   [UPDATE_READING_END](state, { day, page }) {
     state[day].reading.end = page;
   },
-  // UPDATE_READING_PROGRESS(state, { day, value }) {
-  //   state[day] = value;
-  // },
 };
 
 export { state, mutations };

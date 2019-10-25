@@ -53,16 +53,29 @@ export default {
 
     const dayBefore = (Number(props.day) - 1).toString();
     const state = {
-      day: $store.state.month[props.day],
+      thatDay: $store.state.month[props.day],
       dayBefore: $store.state.month[dayBefore],
     };
 
-    const { book } = useBook();
-    const { reading } = useReading(props.day, $store, state);
+    const { book } = useBook(state.thatDay);
+    const { reading } = useReading(state.thatDay, $store, props.day);
+
+    if (canContinueReading(state.dayBefore)) {
+      reading.start = state.dayBefore.reading.end;
+      book.title = state.dayBefore.book.title;
+      book.pages = state.dayBefore.book.pages;
+    }
 
     const bookReadingProgress = computed(() => {
-      if (reading.progress > 0 && !book.pages) return 'missing pages';
-      return reading.end ? `${percentage(reading.progress, book.pages)}%` : '';
+      if (!book.pages) return 'missing pages';
+      if (!reading.progress || typeof reading.progress !== 'number') return '';
+
+      let temp = reading.progress;
+      if (canContinueReading(state.dayBefore)) {
+        temp += state.dayBefore.reading.end;
+      }
+      const bookRead = percentage(temp, book.pages);
+      return `${bookRead}%`;
     });
 
     const challengeIsCompleted = computed(() => {
@@ -78,11 +91,18 @@ export default {
   },
 };
 
-function useReading(day, $store, state) {
+function useReading(thatDay, $store, day) {
   const reading = reactive({
-    start: state.day.reading.start,
-    end: state.day.reading.end,
-    progress: computed(() => (reading.end ? reading.end - reading.start : '')),
+    start: thatDay.reading.start,
+    end: thatDay.reading.end,
+    progress: computed(() => {
+      if (!reading.end) return '';
+
+      const temp = reading.end - reading.start;
+      if (temp < 0) return "What's been read cannot be unread!";
+
+      return temp;
+    }),
   });
 
   watch(
@@ -90,10 +110,6 @@ function useReading(day, $store, state) {
     (page) => $store.commit('month/UPDATE_READING_START', { day, page }),
     { lazy: true },
   );
-
-  if (canContinueReading(state.dayBefore)) {
-    reading.start = state.dayBefore.reading.end;
-  }
 
   watch(
     () => reading.end,
@@ -104,16 +120,18 @@ function useReading(day, $store, state) {
   return { reading };
 }
 
-const canContinueReading = (dayBefore) => {
-  return dayBefore && dayBefore.reading.end;
-};
-
-function useBook() {
+function useBook(thatDay) {
   const book = reactive({
-    title: null,
-    pages: null,
+    title: thatDay.book.title,
+    pages: thatDay.book.pages,
   });
 
   return { book };
 }
+
+const canContinueReading = (dayBefore) => {
+  if (!dayBefore) return;
+  // store fields required to resume reading
+  return dayBefore.reading.end && dayBefore.book.title && dayBefore.book.pages;
+};
 </script>
