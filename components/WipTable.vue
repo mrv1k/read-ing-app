@@ -14,11 +14,11 @@
     </thead>
     <tbody>
       <WipTableRow
-        v-for="day in monthDays"
-        :key="`${monthName}-${day}`"
+        v-for="day in currentMonth.daysArray"
+        :key="`${currentMonth.name}-${day}`"
         :day="day"
-        :is-today="isToday(day)"
-        :month-name="monthName"
+        :is-today="days.isToday(day)"
+        :month-name="currentMonth.name"
         :challenge-goal="challengeGoal"
       />
     </tbody>
@@ -26,12 +26,8 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api';
-import { format } from 'date-fns';
-// import { format, getDaysInMonth } from 'date-fns';
-
 import WipTableRow from '@/components/WipTableRow.vue';
-// import { initializeArrayWithPaddedRange } from '@/utils/helpers';
+import { days, currentMonth } from '@/utils/dates';
 
 export default {
   components: {
@@ -45,24 +41,9 @@ export default {
     },
   },
 
-  setup() {
-    const date = new Date();
-    const monthName = computed(() => format(date, 'MMM'));
-
-    // const daysInMonth = getDaysInMonth(date);
-    const monthDays = computed(
-      () => ['21', '22', '23', '24'],
-      // initializeArrayWithPaddedRange(daysInMonth),
-    );
-
-    const today = format(date, 'dd');
-    const isToday = (day) => day === today;
-
-    return {
-      isToday,
-      monthName,
-      monthDays,
-    };
+  computed: {
+    currentMonth: () => currentMonth,
+    days: () => days,
   },
 };
 </script>

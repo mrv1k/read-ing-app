@@ -1,11 +1,10 @@
 import Vue from 'vue';
 import { UPDATE_READING_START, UPDATE_READING_END } from './mutation-types';
-
-const wipTableStub = ['21', '22', '23', '24'];
+import { currentMonth } from '@/utils/dates';
 
 const generatedState = {};
 
-wipTableStub.forEach((day) => {
+currentMonth.daysArray.forEach((day) => {
   Vue.set(generatedState, day, {
     reading: {
       start: null,
