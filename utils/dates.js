@@ -11,16 +11,12 @@ class Month {
   }
 }
 
-class Days {
-  constructor() {
-    this.today = format(now, 'dd');
-  }
-  isToday(day) {
-    return day === this.today;
-  }
+const currentMonth = new Month();
+
+const today = format(now, 'dd');
+
+function isToday(day) {
+  return day === today;
 }
 
-const currentMonth = new Month();
-const days = new Days();
-
-export { currentMonth, days };
+export { currentMonth, today, isToday };

@@ -1,9 +1,9 @@
 <template>
   <tr :class="{ 'border-t-2 border-b-2 border-gray-600': isToday }">
     <WipTableCell :class="{ 'bg-green-500': challengeIsCompleted }">
-      {{ day }}
+      {{ thatDay }}
     </WipTableCell>
-    <WipTableCell>{{ day }} {{ monthName }}</WipTableCell>
+    <WipTableCell>{{ thatDay }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="reading.start"></WipTableInput>
     <WipTableInput v-model.number="reading.end"></WipTableInput>
     <WipTableCell>{{ reading.progress }}</WipTableCell>
@@ -29,7 +29,7 @@ export default {
   },
 
   props: {
-    day: {
+    thatDay: {
       type: String,
       required: true,
     },
@@ -51,14 +51,14 @@ export default {
   setup(props, { root, emit }) {
     const { $store } = root;
 
-    const dayBefore = (Number(props.day) - 1).toString();
+    const dayBefore = (Number(props.thatDay) - 1).toString();
     const state = {
-      thatDay: $store.state.month[props.day],
+      thatDay: $store.state.month[props.thatDay],
       dayBefore: $store.state.month[dayBefore],
     };
 
     const { book } = useBook(state.thatDay);
-    const { reading } = useReading(state.thatDay, $store, props.day);
+    const { reading } = useReading(state.thatDay, $store, props.thatDay);
 
     if (canContinueReading(state.dayBefore)) {
       reading.start = state.dayBefore.reading.end;

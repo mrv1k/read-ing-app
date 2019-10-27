@@ -14,10 +14,10 @@
     </thead>
     <tbody>
       <WipTableRow
-        v-for="day in currentMonth.daysArray"
-        :key="`${currentMonth.name}-${day}`"
-        :day="day"
-        :is-today="days.isToday(day)"
+        v-for="thatDay in currentMonth.daysArray"
+        :key="`${currentMonth.name}-${thatDay}`"
+        :that-day="thatDay"
+        :is-today="isToday(thatDay)"
         :month-name="currentMonth.name"
         :challenge-goal="challengeGoal"
       />
@@ -27,7 +27,7 @@
 
 <script>
 import WipTableRow from '@/components/WipTableRow.vue';
-import { days, currentMonth } from '@/utils/dates';
+import { today, isToday, currentMonth } from '@/utils/dates';
 
 export default {
   components: {
@@ -43,7 +43,10 @@ export default {
 
   computed: {
     currentMonth: () => currentMonth,
-    days: () => days,
+    today: () => today,
+  },
+  methods: {
+    isToday,
   },
 };
 </script>

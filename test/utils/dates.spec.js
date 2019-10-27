@@ -1,6 +1,10 @@
-import { currentMonth, days } from '@/utils/dates';
+import { currentMonth, today, isToday } from '@/utils/dates';
 
 describe('utils/dates', () => {
+  it('today - returns double digit numerical date', () => {
+    expect(today).toEqual(expect.stringMatching(/\d\d/));
+  });
+
   describe('Month class', () => {
     it('has 3 properties', () => {
       expect(currentMonth).toHaveProperty('name');
@@ -9,12 +13,14 @@ describe('utils/dates', () => {
     });
   });
 
-  describe('Days class', () => {
-    it('has 1 property - "today"', () => {
-      expect(days).toHaveProperty('today');
+  describe('isToday', () => {
+    it('returns true when given today', () => {
+      const result = isToday(today);
+      expect(result).toBe(true);
     });
-    it('has 1 method - isToday', () => {
-      expect(days).toHaveProperty('isToday');
+    it('returns false when given non today value', () => {
+      const result = isToday('32');
+      expect(result).toBe(false);
     });
   });
 });
