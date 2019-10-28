@@ -21,16 +21,12 @@ const book = {
   title: "Yesterday's book",
   pages: 322,
 };
-Vue.set(generatedState, '21', {
-  reading: { start: 1, end: 26 },
+Vue.set(generatedState, '26', {
+  reading: { start: 22, end: 33 },
   book,
 });
-Vue.set(generatedState, '22', {
-  reading: { start: 26, end: 51 },
-  book,
-});
-Vue.set(generatedState, '22', {
-  reading: { start: 51, end: 76 },
+Vue.set(generatedState, '27', {
+  reading: { start: 33, end: 44 },
   book,
 });
 

@@ -12,7 +12,7 @@
       v-model.number="book.pages"
       input-class="w-10"
     ></WipTableInput>
-    <WipTableCell>{{ bookReadingProgress }}</WipTableCell>
+    <WipTableCell>{{ book.completionProgress }}</WipTableCell>
   </tr>
 </template>
 
@@ -51,57 +51,48 @@ export default {
   setup(props, { root, emit }) {
     const { $store } = root;
 
-    const dayBefore = (Number(props.thatDay) - 1).toString();
     const state = {
       thatDay: $store.state.month[props.thatDay],
-      dayBefore: $store.state.month[dayBefore],
+      yesterday: props.isToday ? tryToContinueReading(props, $store) : false,
     };
 
-    const { book } = useBook(state.thatDay);
-    const { reading } = useReading(state.thatDay, $store, props.thatDay);
-
-    if (canContinueReading(state.dayBefore)) {
-      reading.start = state.dayBefore.reading.end;
-      book.title = state.dayBefore.book.title;
-      book.pages = state.dayBefore.book.pages;
-    }
-
-    const bookReadingProgress = computed(() => {
-      if (!book.pages) return 'missing pages';
-      if (!reading.progress || typeof reading.progress !== 'number') return '';
-
-      let temp = reading.progress;
-      if (canContinueReading(state.dayBefore)) {
-        temp += state.dayBefore.reading.end;
-      }
-      const bookRead = percentage(temp, book.pages);
-      return `${bookRead}%`;
-    });
+    const { reading } = useReading(state, $store, props.thatDay);
+    const { book } = useBook(state, reading);
 
     const challengeIsCompleted = computed(() => {
       return reading.progress >= props.challengeGoal;
     });
 
     return {
-      bookReadingProgress,
       reading,
       book,
       challengeIsCompleted,
+      state,
     };
   },
 };
 
-function useReading(thatDay, $store, day) {
+const tryToContinueReading = (props, $store) => {
+  const yesterday = (Number(props.thatDay) - 1).toString();
+  const state = $store.state.month[yesterday];
+  if (!state) return false;
+
+  return state.reading.end && state.book.title && state.book.pages
+    ? state
+    : false;
+};
+
+function useReading(state, $store, day) {
+  const start = state.yesterday
+    ? state.yesterday.reading.end
+    : state.thatDay.reading.start;
+
   const reading = reactive({
-    start: thatDay.reading.start,
-    end: thatDay.reading.end,
+    start,
+    end: state.thatDay.reading.end,
     progress: computed(() => {
       if (!reading.end) return '';
-
-      const temp = reading.end - reading.start;
-      if (temp < 0) return "What's been read cannot be unread!";
-
-      return temp;
+      return reading.end - reading.start;
     }),
   });
 
@@ -120,18 +111,22 @@ function useReading(thatDay, $store, day) {
   return { reading };
 }
 
-function useBook(thatDay) {
+function useBook(state, reading, dayBefore) {
   const book = reactive({
-    title: thatDay.book.title,
-    pages: thatDay.book.pages,
+    title: state.thatDay.book.title,
+    pages: state.thatDay.book.pages,
+    completionProgress: computed(() => {
+      if (!book.pages) return 'missing pages';
+      if (!reading.progress) return '';
+
+      // const temp = reading.progress + state.reading.end;
+      const temp = reading.progress;
+
+      const bookRead = percentage(temp, book.pages);
+      return `${bookRead}%`;
+    }),
   });
 
   return { book };
 }
-
-const canContinueReading = (dayBefore) => {
-  if (!dayBefore) return;
-  // store fields required to resume reading
-  return dayBefore.reading.end && dayBefore.book.title && dayBefore.book.pages;
-};
 </script>
