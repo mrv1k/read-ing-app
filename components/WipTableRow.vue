@@ -51,10 +51,9 @@ export default {
   setup(props, { root, emit }) {
     const { $store } = root;
 
-    const state = {
-      thatDay: $store.state.month[props.thatDay],
-      yesterday: props.isToday ? tryToContinueReading(props, $store) : false,
-    };
+    const state = props.isToday
+      ? $store.getters['month/continueYesterdayIfTodayIsEmpty'](props.thatDay)
+      : $store.state.month[props.thatDay];
 
     const { reading } = useReading(state, $store, props.thatDay);
     const { book } = useBook(state, reading);
@@ -72,57 +71,34 @@ export default {
   },
 };
 
-const tryToContinueReading = (props, $store) => {
-  const yesterday = (Number(props.thatDay) - 1).toString();
-  const state = $store.state.month[yesterday];
-  if (!state) return false;
-
-  return state.reading.end && state.book.title && state.book.pages
-    ? state
-    : false;
-};
-
 function useReading(state, $store, day) {
-  const start = state.yesterday
-    ? state.yesterday.reading.end
-    : state.thatDay.reading.start;
-
   const reading = reactive({
-    start,
-    end: state.thatDay.reading.end,
+    start: state.reading.start,
+    end: state.reading.end,
     progress: computed(() => {
       if (!reading.end) return '';
       return reading.end - reading.start;
     }),
   });
 
-  watch(
-    () => reading.start,
-    (page) => $store.commit('month/UPDATE_READING_START', { day, page }),
-    { lazy: true },
-  );
+  const commit = (type) => (page) =>
+    $store.commit(`month/${type}`, { day, page });
 
-  watch(
-    () => reading.end,
-    (page) => $store.commit('month/UPDATE_READING_END', { day, page }),
-    { lazy: true },
-  );
+  watch(() => reading.start, commit('UPDATE_READING_START'), { lazy: true });
+  watch(() => reading.end, commit('UPDATE_READING_END'), { lazy: true });
 
   return { reading };
 }
 
 function useBook(state, reading, dayBefore) {
   const book = reactive({
-    title: state.thatDay.book.title,
-    pages: state.thatDay.book.pages,
+    title: state.book.title,
+    pages: state.book.pages,
     completionProgress: computed(() => {
       if (!book.pages) return 'missing pages';
       if (!reading.progress) return '';
 
-      // const temp = reading.progress + state.reading.end;
-      const temp = reading.progress;
-
-      const bookRead = percentage(temp, book.pages);
+      const bookRead = percentage(reading.progress, book.pages);
       return `${bookRead}%`;
     }),
   });

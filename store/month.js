@@ -21,12 +21,12 @@ const book = {
   title: "Yesterday's book",
   pages: 322,
 };
-Vue.set(generatedState, '26', {
-  reading: { start: 22, end: 33 },
+Vue.set(generatedState, '27', {
+  reading: { start: 33, end: 55 },
   book,
 });
-Vue.set(generatedState, '27', {
-  reading: { start: 33, end: 44 },
+Vue.set(generatedState, '28', {
+  reading: { start: 44, end: 55 },
   book,
 });
 
@@ -41,4 +41,39 @@ const mutations = {
   },
 };
 
-export { state, mutations };
+const getters = {
+  continueYesterdayIfTodayIsEmpty: (state) => {
+    const tryToContinueReading = (today) => {
+      return todayExists(state[today])
+        ? state[today]
+        : continueYesterday(state, today);
+    };
+
+    return tryToContinueReading;
+  },
+};
+
+const todayExists = (today) => today.reading.start !== null;
+
+const continueYesterday = (state, today) => {
+  const yesterdayNum = (Number(today) - 1).toString();
+  const yesterday = state[yesterdayNum];
+
+  if (!yesterday.reading.end) return state[today];
+
+  return createPartialYesterdayCopy(yesterday);
+};
+const createPartialYesterdayCopy = (yesterday) =>
+  Object.assign(
+    {},
+    {
+      book: { ...yesterday.book },
+      reading: { start: yesterday.reading.end, end: null },
+    },
+  );
+// take yesterday book, use yesterday end as todays start
+
+// const temp = reading.progress + state.reading.end;
+// const temp = reading.progress;
+
+export { state, mutations, getters };
