@@ -52,7 +52,7 @@ export default {
     const { $store } = root;
 
     const state = props.isToday
-      ? $store.getters['month/continueYesterdayIfTodayIsEmpty'](props.thatDay)
+      ? $store.getters['month/continueReading'](props.thatDay)
       : $store.state.month[props.thatDay];
 
     const { reading } = useReading(state, $store, props.thatDay);
@@ -66,7 +66,6 @@ export default {
       reading,
       book,
       challengeIsCompleted,
-      state,
     };
   },
 };
