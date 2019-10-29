@@ -1,5 +1,11 @@
 import Vue from 'vue';
-import { UPDATE_READING_START, UPDATE_READING_END } from './mutation-types';
+import {
+  UPDATE_READING_START,
+  UPDATE_READING_END,
+  SET_BOOK_TITLE,
+  SET_BOOK_PAGES,
+  SET_BOOK_PROGRESS,
+} from './mutation-types';
 import { currentMonth } from '@/utils/dates';
 import { continueReading } from '@/utils/store-month-helpers';
 
@@ -14,6 +20,7 @@ currentMonth.daysArray.forEach((day) => {
     book: {
       title: null,
       pages: null,
+      completedPercent: null,
     },
   });
 });
@@ -21,9 +28,10 @@ currentMonth.daysArray.forEach((day) => {
 const book = {
   title: "Yesterday's book",
   pages: 322,
+  completedPercent: '1%',
 };
 Vue.set(generatedState, '27', {
-  reading: { start: 33, end: 55 },
+  reading: { start: 1, end: 44 },
   book,
 });
 Vue.set(generatedState, '28', {
@@ -40,13 +48,19 @@ const mutations = {
   [UPDATE_READING_END](state, { day, page }) {
     state[day].reading.end = page;
   },
+  [SET_BOOK_TITLE](state, { day, title }) {
+    state[day].book.title = title;
+  },
+  [SET_BOOK_PAGES](state, { day, pages }) {
+    state[day].book.pages = pages;
+  },
+  [SET_BOOK_PROGRESS](state, { day, percent }) {
+    state[day].book.completedPercent = percent;
+  },
 };
 
 const getters = {
   continueReading: (state) => continueReading.bind(null, state),
 };
-
-// const temp = reading.progress + state.reading.end;
-// const temp = reading.progress;
 
 export { state, mutations, getters };
