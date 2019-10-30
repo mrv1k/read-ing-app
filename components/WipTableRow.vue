@@ -12,7 +12,8 @@
       v-model.number="book.pages"
       input-class="w-10"
     ></WipTableInput>
-    <WipTableCell>{{ book.completionProgress }}</WipTableCell>
+    <WipTableCell>{{ book.progress }}%</WipTableCell>
+    <WipTableCell>{{ bookCompletedPercent }}%</WipTableCell>
   </tr>
 </template>
 
@@ -58,6 +59,11 @@ export default {
     const { reading } = useReading(state);
     const { book } = useBook(state, reading);
 
+    const bookCompletedPercent = $store.getters['month/bookCompletedPercent'](
+      props.thatDay,
+      book,
+    );
+
     const challengeIsCompleted = computed(() => {
       return reading.progress >= props.challengeGoal;
     });
@@ -67,6 +73,7 @@ export default {
     return {
       reading,
       book,
+      bookCompletedPercent,
       challengeIsCompleted,
     };
   },
@@ -89,17 +96,11 @@ function useBook(state, reading) {
   const book = reactive({
     title: state.book.title,
     pages: state.book.pages,
-    completionProgress: computed(() => {
+    progress: computed(() => {
       if (!book.pages) return 'missing pages';
       if (!reading.progress) return '';
 
-      // FIXME:
-      // if (state.book.completedPercent) {
-      //   return state.book.completedPercent;
-      // }
-      const bookRead = percentage(reading.progress, book.pages);
-
-      return `${bookRead}%`;
+      return percentage(reading.progress, book.pages);
     }),
   });
 
@@ -109,22 +110,18 @@ function useBook(state, reading) {
 function syncWithStore(props, $store, { book, reading }) {
   const day = props.thatDay;
 
-  const commit = (type, key) => (value) => {
+  const commit = (type, key = 'data') => (value) => {
     $store.commit(`month/${type}`, { day, [key]: value });
   };
 
-  const lazyWatcher = (source, commitCallback) => {
-    watch(source, commitCallback, { lazy: true });
-  };
+  const watcher = (source, commitCallback, options = { lazy: true }) =>
+    watch(source, commitCallback, options);
 
-  lazyWatcher(() => reading.start, commit('UPDATE_READING_START', 'page'));
-  lazyWatcher(() => reading.start, commit('UPDATE_READING_END', 'page'));
+  watcher(() => reading.start, commit('UPDATE_READING_START', 'page'));
+  watcher(() => reading.end, commit('UPDATE_READING_END', 'page'));
 
-  lazyWatcher(() => book.title, commit('SET_BOOK_TITLE', 'title'));
-  lazyWatcher(() => book.pages, commit('SET_BOOK_PAGES', 'pages'));
-  lazyWatcher(
-    () => book.completionProgress,
-    commit('SET_BOOK_PROGRESS', 'percent'),
-  );
+  watcher(() => book.title, commit('SET_BOOK_TITLE', 'title'));
+  watcher(() => book.pages, commit('SET_BOOK_PAGES', 'pages'));
+  watcher(() => book.progress, commit('SET_BOOK_PROGRESS', 'percent'));
 }
 </script>

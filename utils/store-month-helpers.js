@@ -1,13 +1,16 @@
 function continueReading(state, today) {
-  if (todayExists(state[today])) return state[today];
+  let todayState;
+  if (todayExists(state[today])) {
+    todayState = state[today];
+  }
 
   const yesterday = (Number(today) - 1).toString();
   const yesterdayState = state[yesterday];
   if (yesterdayExists(yesterdayState)) {
-    return createTodayFromYesterday(yesterdayState);
+    todayState = createTodayFromYesterday(yesterdayState);
   }
 
-  return state[today];
+  return todayState;
 }
 
 const todayExists = (today) => today.reading.start !== null;
