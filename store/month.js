@@ -5,9 +5,10 @@ import {
   SET_BOOK_TITLE,
   SET_BOOK_PAGES,
   SET_BOOK_PROGRESS,
-} from './mutation-types';
+} from '@/store/mutation-types';
+
 import { currentMonth } from '@/utils/dates';
-import { continueReading } from '@/utils/store-month-helpers';
+import { continueYesterdayReading } from '@/utils/store-month-helpers';
 
 const generatedState = {};
 
@@ -63,7 +64,6 @@ const mutations = {
 };
 
 const getters = {
-  continueReading: (state) => continueReading.bind(null, state),
   bookCompletedPercent: (state) => (day, book) => {
     const yesterday = (Number(day) - 1).toString();
 
@@ -84,6 +84,8 @@ const getters = {
   },
 };
 
-const actions = {};
+const actions = {
+  continueYesterdayReading,
+};
 
 export { state, mutations, getters, actions };
