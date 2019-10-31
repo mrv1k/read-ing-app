@@ -6,7 +6,7 @@
     <WipTableCell>{{ thatDay }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="reading.start"></WipTableInput>
     <WipTableInput v-model.number="reading.end"></WipTableInput>
-    <WipTableCell>{{ reading.progress }}</WipTableCell>
+    <WipTableCell>{{ reading.pagesRead }}</WipTableCell>
     <WipTableInput v-model="book.title" input-class="w-auto"></WipTableInput>
     <WipTableInput
       v-model.number="book.pages"
@@ -25,6 +25,7 @@ import { percentage } from '@/utils/helpers';
 import {
   SET_READING_START,
   SET_READING_END,
+  SET_READING_PAGES_READ,
   SET_BOOK_TITLE,
   SET_BOOK_PAGES,
   SET_BOOK_PROGRESS,
@@ -76,7 +77,9 @@ export default {
     );
 
     const challengeIsCompleted = computed(() => {
-      return reading.progress >= props.challengeGoal;
+      if (reading.pagesRead === '') return false;
+
+      return reading.pagesRead >= props.challengeGoal;
     });
 
     syncWithStore(props, $store, { reading, book });
@@ -94,7 +97,7 @@ function useReading(state) {
   const reading = reactive({
     start: state.reading.start,
     end: state.reading.end,
-    progress: computed(() => {
+    pagesRead: computed(() => {
       if (!reading.end) return '';
       return reading.end - reading.start;
     }),
@@ -109,9 +112,9 @@ function useBook(state, reading) {
     pages: state.book.pages,
     progress: computed(() => {
       if (!book.pages) return 'missing pages';
-      if (!reading.progress) return '';
+      if (!reading.pagesRead) return '';
 
-      return percentage(reading.progress, book.pages);
+      return percentage(reading.pagesRead, book.pages);
     }),
   });
 
@@ -130,6 +133,7 @@ function syncWithStore(props, $store, { book, reading }) {
 
   watcher(() => reading.start, commit(SET_READING_START, 'page'));
   watcher(() => reading.end, commit(SET_READING_END, 'page'));
+  watcher(() => reading.pagesRead, commit(SET_READING_PAGES_READ, 'pagesRead'));
 
   watcher(() => book.title, commit(SET_BOOK_TITLE, 'title'));
   watcher(() => book.pages, commit(SET_BOOK_PAGES, 'pages'));

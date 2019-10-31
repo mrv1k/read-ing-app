@@ -17,30 +17,33 @@ currentMonth.daysArray.forEach((day) => {
     reading: {
       start: null,
       end: null,
-      progress: null,
+      pagesRead: null,
     },
     book: {
       title: null,
       pages: null,
       progress: null,
+      totalProgress: null,
     },
   });
 });
 
 Vue.set(generatedState, '29', {
-  reading: { start: 1, end: 44, progress: null },
+  reading: { start: 1, end: 44, pagesRead: null },
   book: {
     title: "Yesterday's book",
     pages: 322,
     progress: 13,
+    totalProgress: 13,
   },
 });
 Vue.set(generatedState, '30', {
-  reading: { start: 44, end: 55, progress: null },
+  reading: { start: 44, end: 55, pagesRead: null },
   book: {
     title: "Yesterday's book",
     pages: 322,
     progress: 3,
+    totalProgress: 16,
   },
 });
 
@@ -53,8 +56,8 @@ const mutations = {
   [SET_READING_END](state, { day, page }) {
     state[day].reading.end = page;
   },
-  [SET_READING_PROGRESS](state, { day, page }) {
-    state[day].reading.end = page;
+  [SET_READING_PROGRESS](state, { day, pagesRead }) {
+    state[day].reading.pagesRead = pagesRead;
   },
 
   [SET_BOOK_TITLE](state, { day, title }) {
