@@ -1,14 +1,14 @@
 import Vue from 'vue';
+import { currentMonth } from '@/utils/dates';
+import { continueYesterdayReading } from '@/utils/store-month-helpers';
 import {
-  UPDATE_READING_START,
-  UPDATE_READING_END,
+  SET_READING_START,
+  SET_READING_END,
   SET_BOOK_TITLE,
   SET_BOOK_PAGES,
   SET_BOOK_PROGRESS,
+  SET_READING_PROGRESS,
 } from '@/store/mutation-types';
-
-import { currentMonth } from '@/utils/dates';
-import { continueYesterdayReading } from '@/utils/store-month-helpers';
 
 const generatedState = {};
 
@@ -17,6 +17,7 @@ currentMonth.daysArray.forEach((day) => {
     reading: {
       start: null,
       end: null,
+      progress: null,
     },
     book: {
       title: null,
@@ -26,16 +27,16 @@ currentMonth.daysArray.forEach((day) => {
   });
 });
 
-Vue.set(generatedState, '28', {
-  reading: { start: 1, end: 44 },
+Vue.set(generatedState, '29', {
+  reading: { start: 1, end: 44, progress: null },
   book: {
     title: "Yesterday's book",
     pages: 322,
     progress: 13,
   },
 });
-Vue.set(generatedState, '29', {
-  reading: { start: 44, end: 55 },
+Vue.set(generatedState, '30', {
+  reading: { start: 44, end: 55, progress: null },
   book: {
     title: "Yesterday's book",
     pages: 322,
@@ -46,12 +47,16 @@ Vue.set(generatedState, '29', {
 const state = () => generatedState;
 
 const mutations = {
-  [UPDATE_READING_START](state, { day, page }) {
+  [SET_READING_START](state, { day, page }) {
     state[day].reading.start = page;
   },
-  [UPDATE_READING_END](state, { day, page }) {
+  [SET_READING_END](state, { day, page }) {
     state[day].reading.end = page;
   },
+  [SET_READING_PROGRESS](state, { day, page }) {
+    state[day].reading.end = page;
+  },
+
   [SET_BOOK_TITLE](state, { day, title }) {
     state[day].book.title = title;
   },
