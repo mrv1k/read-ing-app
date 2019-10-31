@@ -1,8 +1,7 @@
 import {
-  SET_READING_START,
-  SET_BOOK_TITLE,
-  SET_BOOK_PAGES,
-  SET_BOOK_PROGRESS,
+  SET_SESSION_START,
+  SET_SESSION_TITLE,
+  SET_SESSION_PAGES_COUNT,
 } from '@/store/mutation-types';
 
 function continueYesterdayReading({ state, commit }, { today }) {
@@ -15,14 +14,13 @@ function continueYesterdayReading({ state, commit }, { today }) {
 
   if (yesterdayReadingExists(yesterday)) {
     const day = today;
-    commit(SET_READING_START, { day, page: yesterday.reading.end });
-    commit(SET_BOOK_TITLE, { day, title: yesterday.book.title });
-    commit(SET_BOOK_PAGES, { day, pages: yesterday.book.pages });
-    commit(SET_BOOK_PROGRESS, { day, percent: yesterday.book.progress });
+    commit(SET_SESSION_START, { day, page: yesterday.end });
+    commit(SET_SESSION_TITLE, { day, title: yesterday.title });
+    commit(SET_SESSION_PAGES_COUNT, { day, pagesCount: yesterday.pagesCount });
   }
 }
 
-const todayReadingExists = (today) => today.reading.start !== null;
-const yesterdayReadingExists = (yesterday) => yesterday.reading.end !== null;
+const todayReadingExists = (today) => today.start !== null;
+const yesterdayReadingExists = (yesterday) => yesterday.end !== null;
 
 export { continueYesterdayReading };

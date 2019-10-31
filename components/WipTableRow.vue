@@ -4,16 +4,16 @@
       {{ thatDay }}
     </WipTableCell>
     <WipTableCell>{{ thatDay }} {{ monthName }}</WipTableCell>
-    <WipTableInput v-model.number="reading.start"></WipTableInput>
-    <WipTableInput v-model.number="reading.end"></WipTableInput>
-    <WipTableCell>{{ reading.pagesRead }}</WipTableCell>
-    <WipTableInput v-model="book.title" input-class="w-auto"></WipTableInput>
+    <WipTableInput v-model.number="session.start"></WipTableInput>
+    <WipTableInput v-model.number="session.end"></WipTableInput>
+    <WipTableCell>{{ pagesProgress }}</WipTableCell>
+    <WipTableInput v-model="session.title" input-class="w-auto"></WipTableInput>
     <WipTableInput
-      v-model.number="book.pages"
+      v-model.number="session.pagesCount"
       input-class="w-10"
     ></WipTableInput>
-    <WipTableCell>{{ book.progress }}%</WipTableCell>
-    <WipTableCell>{{ bookCompletedPercent }}%</WipTableCell>
+    <WipTableCell>{{ bookProgress }}%</WipTableCell>
+    <WipTableCell>{{ bookProgressTotal }}%</WipTableCell>
   </tr>
 </template>
 
@@ -21,14 +21,11 @@
 import { computed, reactive, watch } from '@vue/composition-api';
 import WipTableCell from '@/components/WipTableCell.vue';
 import WipTableInput from '@/components/WipTableInput.vue';
-import { percentage } from '@/utils/helpers';
 import {
-  SET_READING_START,
-  SET_READING_END,
-  SET_READING_PAGES_READ,
-  SET_BOOK_TITLE,
-  SET_BOOK_PAGES,
-  SET_BOOK_PROGRESS,
+  SET_SESSION_START,
+  SET_SESSION_END,
+  SET_SESSION_TITLE,
+  SET_SESSION_PAGES_COUNT,
 } from '@/store/mutation-types';
 
 export default {
@@ -68,60 +65,53 @@ export default {
       });
     }
 
-    const { reading } = useReading(state);
-    const { book } = useBook(state, reading);
+    const { session } = useSession(state);
 
-    const bookCompletedPercent = $store.getters['month/bookCompletedPercent'](
-      props.thatDay,
-      book,
+    const pagesProgress = computed(() =>
+      $store.getters['month/pagesProgress'](props.thatDay),
+    );
+    const bookProgress = computed(() =>
+      $store.getters['month/bookProgress'](props.thatDay),
+    );
+    const bookProgressTotal = computed(() =>
+      $store.getters['month/bookProgressTotal'](props.thatDay),
     );
 
-    const challengeIsCompleted = computed(() => {
-      if (reading.pagesRead === '') return false;
+    // const progress = { pages: 43, book: 13, bookTotal: 13 };
+    // console.log(progress.pages, progress.book, progress.bookTotal);
 
-      return reading.pagesRead >= props.challengeGoal;
+    const challengeIsCompleted = computed(() => {
+      if (session.pagesProgress === '') return false;
+
+      return session.pagesProgress >= props.challengeGoal;
     });
 
-    syncWithStore(props, $store, { reading, book });
+    syncWithStore(props, $store, session);
 
     return {
-      reading,
-      book,
-      bookCompletedPercent,
+      session,
+
+      pagesProgress,
+      bookProgress,
+      bookProgressTotal,
+
       challengeIsCompleted,
     };
   },
 };
 
-function useReading(state) {
-  const reading = reactive({
-    start: state.reading.start,
-    end: state.reading.end,
-    pagesRead: computed(() => {
-      if (!reading.end) return '';
-      return reading.end - reading.start;
-    }),
+function useSession(state) {
+  const session = reactive({
+    start: state.start,
+    end: state.end,
+    title: state.title,
+    pagesCount: state.pagesCount,
   });
 
-  return { reading };
+  return { session };
 }
 
-function useBook(state, reading) {
-  const book = reactive({
-    title: state.book.title,
-    pages: state.book.pages,
-    progress: computed(() => {
-      if (!book.pages) return 'missing pages';
-      if (!reading.pagesRead) return '';
-
-      return percentage(reading.pagesRead, book.pages);
-    }),
-  });
-
-  return { book };
-}
-
-function syncWithStore(props, $store, { book, reading }) {
+function syncWithStore(props, $store, session) {
   const day = props.thatDay;
 
   const commit = (type, key = 'data') => (value) => {
@@ -131,12 +121,9 @@ function syncWithStore(props, $store, { book, reading }) {
   const watcher = (source, commitCallback, options = { lazy: true }) =>
     watch(source, commitCallback, options);
 
-  watcher(() => reading.start, commit(SET_READING_START, 'page'));
-  watcher(() => reading.end, commit(SET_READING_END, 'page'));
-  watcher(() => reading.pagesRead, commit(SET_READING_PAGES_READ, 'pagesRead'));
-
-  watcher(() => book.title, commit(SET_BOOK_TITLE, 'title'));
-  watcher(() => book.pages, commit(SET_BOOK_PAGES, 'pages'));
-  watcher(() => book.progress, commit(SET_BOOK_PROGRESS, 'percent'));
+  watcher(() => session.start, commit(SET_SESSION_START, 'page'));
+  watcher(() => session.end, commit(SET_SESSION_END, 'page'));
+  watcher(() => session.title, commit(SET_SESSION_TITLE, 'title'));
+  watcher(() => session.pagesCount, commit(SET_SESSION_PAGES_COUNT, 'pages'));
 }
 </script>

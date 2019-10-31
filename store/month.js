@@ -2,93 +2,87 @@ import Vue from 'vue';
 import { currentMonth } from '@/utils/dates';
 import { continueYesterdayReading } from '@/utils/store-month-helpers';
 import {
-  SET_READING_START,
-  SET_READING_END,
-  SET_BOOK_TITLE,
-  SET_BOOK_PAGES,
-  SET_BOOK_PROGRESS,
-  SET_READING_PROGRESS,
+  SET_SESSION_START,
+  SET_SESSION_END,
+  SET_SESSION_TITLE,
+  SET_SESSION_PAGES_COUNT,
 } from '@/store/mutation-types';
+import { percentage } from '~/utils/helpers';
 
 const generatedState = {};
 
 currentMonth.daysArray.forEach((day) => {
   Vue.set(generatedState, day, {
-    reading: {
-      start: null,
-      end: null,
-      pagesRead: null,
-    },
-    book: {
-      title: null,
-      pages: null,
-      progress: null,
-      totalProgress: null,
-    },
+    start: null,
+    end: null,
+    title: null,
+    pagesCount: null,
   });
 });
 
 Vue.set(generatedState, '29', {
-  reading: { start: 1, end: 44, pagesRead: null },
-  book: {
-    title: "Yesterday's book",
-    pages: 322,
-    progress: 13,
-    totalProgress: 13,
-  },
+  start: 1,
+  end: 44,
+  title: "Yesterday's book",
+  pagesCount: 322,
 });
 Vue.set(generatedState, '30', {
-  reading: { start: 44, end: 55, pagesRead: null },
-  book: {
-    title: "Yesterday's book",
-    pages: 322,
-    progress: 3,
-    totalProgress: 16,
-  },
+  start: 44,
+  end: 55,
+  title: "Yesterday's book",
+  pagesCount: 322,
 });
 
 const state = () => generatedState;
 
 const mutations = {
-  [SET_READING_START](state, { day, page }) {
-    state[day].reading.start = page;
+  [SET_SESSION_START](state, { day, page }) {
+    state[day].start = page;
   },
-  [SET_READING_END](state, { day, page }) {
-    state[day].reading.end = page;
+  [SET_SESSION_END](state, { day, page }) {
+    state[day].end = page;
   },
-  [SET_READING_PROGRESS](state, { day, pagesRead }) {
-    state[day].reading.pagesRead = pagesRead;
+  [SET_SESSION_TITLE](state, { day, title }) {
+    state[day].title = title;
   },
-
-  [SET_BOOK_TITLE](state, { day, title }) {
-    state[day].book.title = title;
-  },
-  [SET_BOOK_PAGES](state, { day, pages }) {
-    state[day].book.pages = pages;
-  },
-  [SET_BOOK_PROGRESS](state, { day, percent }) {
-    state[day].book.progress = percent;
+  [SET_SESSION_PAGES_COUNT](state, { day, pagesCount }) {
+    state[day].pagesCount = pagesCount;
   },
 };
 
 const getters = {
-  bookCompletedPercent: (state) => (day, book) => {
-    const yesterday = (Number(day) - 1).toString();
+  pagesProgress: (monthState, getters) => (day) => {
+    const state = monthState[day];
 
-    if (state[yesterday]) {
-      const yesterdayBook = state[yesterday].book;
+    if (!state.end) return '';
 
-      if (yesterdayBook.title === null) return 0;
+    return state.end - state.start;
+  },
 
-      if (yesterdayBook.title === book.title) {
-        // console.log('yesterday', yesterday, yesterdayBook.progress);
-        // console.log('day', day, book.progress);
+  bookProgress: (monthState, getters) => (day) => {
+    const state = monthState[day];
 
-        return yesterdayBook.progress + book.progress;
+    if (!state.pagesCount) return 'missing pages';
+    if (!getters.pagesProgress(day)) return '';
+
+    return percentage(getters.pagesProgress(day), state.pagesCount);
+  },
+
+  bookProgressTotal: (monthState, getters) => (day) => {
+    const dayBeforeNum = (Number(day) - 1).toString();
+
+    const thatDay = monthState[day];
+    const dayBefore = monthState[dayBeforeNum];
+
+    if (dayBefore) {
+      if (!dayBefore.pagesCount) return 0;
+
+      if (thatDay.title === dayBefore.title) {
+        return getters.bookProgress(day) + getters.bookProgress(dayBeforeNum);
       }
     }
 
-    return book.progress;
+    return getters.bookProgress(day);
   },
 };
 
