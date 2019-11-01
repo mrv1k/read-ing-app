@@ -124,6 +124,9 @@ function syncWithStore(props, $store, session) {
   watcher(() => session.start, commit(SET_SESSION_START, 'page'));
   watcher(() => session.end, commit(SET_SESSION_END, 'page'));
   watcher(() => session.title, commit(SET_SESSION_TITLE, 'title'));
-  watcher(() => session.pagesCount, commit(SET_SESSION_PAGES_COUNT, 'pages'));
+  watcher(
+    () => session.pagesCount,
+    commit(SET_SESSION_PAGES_COUNT, 'pagesCount'),
+  );
 }
 </script>

@@ -8,7 +8,7 @@ class Month {
     this.name = format(now, 'MMM');
     this.daysCount = getDaysInMonth(now);
     // this.daysArray = initializeArrayWithPaddedRange(this.daysCount);
-    this.daysArray = ['28', '29', '30', '31'];
+    this.daysArray = ['01', '02', '03', '04', '05'];
   }
 }
 

@@ -20,16 +20,22 @@ currentMonth.daysArray.forEach((day) => {
   });
 });
 
-Vue.set(generatedState, '29', {
+Vue.set(generatedState, '02', {
   start: 1,
   end: 44,
-  title: "Yesterday's book",
+  title: "November's book",
   pagesCount: 322,
 });
-Vue.set(generatedState, '30', {
+Vue.set(generatedState, '03', {
   start: 44,
   end: 55,
-  title: "Yesterday's book",
+  title: "November's book",
+  pagesCount: 322,
+});
+Vue.set(generatedState, '04', {
+  start: 55,
+  end: 100,
+  title: "November's book",
   pagesCount: 322,
 });
 
@@ -51,7 +57,10 @@ const mutations = {
 };
 
 const getters = {
-  pagesProgress: (monthState, getters) => (day) => {
+  arrayState(monthState) {
+    return Object.entries(monthState);
+  },
+  pagesProgress: (monthState) => (day) => {
     const state = monthState[day];
 
     if (!state.end) return '';
@@ -68,21 +77,27 @@ const getters = {
     return percentage(getters.pagesProgress(day), state.pagesCount);
   },
 
-  bookProgressTotal: (monthState, getters) => (day) => {
-    const dayBeforeNum = (Number(day) - 1).toString();
+  bookProgressTotal: (monthState, getters) => (payloadDay) => {
+    const payloadState = monthState[payloadDay];
 
-    const thatDay = monthState[day];
-    const dayBefore = monthState[dayBeforeNum];
+    const bookIsMissing = () => !payloadState.title || !payloadState.pagesCount;
+    if (bookIsMissing()) return '';
 
-    if (dayBefore) {
-      if (!dayBefore.pagesCount) return 0;
+    const filteredByDays = getters.arrayState.filter(
+      ([aDay]) => aDay <= payloadDay,
+    );
 
-      if (thatDay.title === dayBefore.title) {
-        return getters.bookProgress(day) + getters.bookProgress(dayBeforeNum);
-      }
-    }
+    const filterByBooks = (state) =>
+      state.filter(
+        ([aDay, aState]) => aState.title === monthState[payloadDay].title,
+      );
 
-    return getters.bookProgress(day);
+    const countTotalProgress = (state) =>
+      state.reduce((acc, [aDay]) => {
+        return acc + getters.bookProgress(aDay);
+      }, 0);
+
+    return countTotalProgress(filterByBooks(filteredByDays));
   },
 };
 
