@@ -81,9 +81,9 @@ export default {
     // console.log(progress.pages, progress.book, progress.bookTotal);
 
     const challengeIsCompleted = computed(() => {
-      if (session.pagesProgress === '') return false;
+      if (pagesProgress.value === '') return false;
 
-      return session.pagesProgress >= props.challengeGoal;
+      return pagesProgress.value >= props.challengeGoal;
     });
 
     syncWithStore(props, $store, session);

@@ -5,6 +5,7 @@ import {
 } from '@/store/mutation-types';
 
 function continueYesterdayReading({ state, commit }, { today }) {
+  if (today === '01') return false;
   if (todayReadingExists(state[today])) {
     return false;
   }
