@@ -1,3 +1,4 @@
+import { getDayBefore } from './dates';
 import {
   SET_SESSION_START,
   SET_SESSION_TITLE,
@@ -5,13 +6,11 @@ import {
 } from '@/store/mutation-types';
 
 function continueYesterdayReading({ state, commit }, { today }) {
-  if (today === '01') return false;
-  if (todayReadingExists(state[today])) {
+  if (todayReadingExists(state[today]) || today === '01') {
     return false;
   }
 
-  const yesterdayNum = (Number(today) - 1).toString();
-  const yesterday = state[yesterdayNum];
+  const yesterday = state[getDayBefore(today)];
 
   if (yesterdayReadingExists(yesterday)) {
     const day = today;

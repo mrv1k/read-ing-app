@@ -10,11 +10,9 @@ const initializeArrayWithPaddedRange = (end) =>
  * Get value percent out of another value
  * @param {Number} value
  * @param {Number} outOf
- * @param {Number} RATIO
  * @returns {Number}
  */
-const percentage = (value, outOf, RATIO = 100) =>
-  Math.floor((value / outOf) * RATIO);
+const percentage = (value, outOf) => Math.floor((value / outOf) * 100);
 
 /**
  * Tranform array into object

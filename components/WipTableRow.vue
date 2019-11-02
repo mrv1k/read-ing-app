@@ -6,19 +6,21 @@
     <WipTableCell>{{ thatDay }} {{ monthName }}</WipTableCell>
     <WipTableInput v-model.number="session.start"></WipTableInput>
     <WipTableInput v-model.number="session.end"></WipTableInput>
-    <WipTableCell>{{ pagesProgress }}</WipTableCell>
+    <WipTableCell>{{ progress.pages }}</WipTableCell>
     <WipTableInput v-model="session.title" input-class="w-auto"></WipTableInput>
     <WipTableInput
       v-model.number="session.pagesCount"
       input-class="w-10"
     ></WipTableInput>
-    <WipTableCell>{{ bookProgress }}%</WipTableCell>
-    <WipTableCell>{{ bookProgressTotal }}%</WipTableCell>
+    <WipTableCell
+      v-text="progress.book ? `${progress.book}%` : ''"
+    ></WipTableCell>
   </tr>
 </template>
 
 <script>
 import { computed, reactive, watch } from '@vue/composition-api';
+import { percentage } from '@/utils/helpers';
 import WipTableCell from '@/components/WipTableCell.vue';
 import WipTableInput from '@/components/WipTableInput.vue';
 import {
@@ -26,6 +28,7 @@ import {
   SET_SESSION_END,
   SET_SESSION_TITLE,
   SET_SESSION_PAGES_COUNT,
+  SET_SESSION_PROGRESS,
 } from '@/store/mutation-types';
 
 export default {
@@ -67,33 +70,33 @@ export default {
 
     const { session } = useSession(state);
 
-    const pagesProgress = computed(() =>
-      $store.getters['month/pagesProgress'](props.thatDay),
-    );
-    const bookProgress = computed(() =>
-      $store.getters['month/bookProgress'](props.thatDay),
-    );
-    const bookProgressTotal = computed(() =>
-      $store.getters['month/bookProgressTotal'](props.thatDay),
-    );
+    const progress = reactive({
+      pages: computed(() => {
+        if (session.end && session.start) {
+          return session.end - session.start;
+        }
+      }),
+      book: computed(() => {
+        if (session.end && session.pagesCount) {
+          return percentage(session.end, session.pagesCount);
+        }
+      }),
+    });
 
     // const progress = { pages: 43, book: 13, bookTotal: 13 };
     // console.log(progress.pages, progress.book, progress.bookTotal);
 
     const challengeIsCompleted = computed(() => {
-      if (pagesProgress.value === '') return false;
-
-      return pagesProgress.value >= props.challengeGoal;
+      if (progress.pages) {
+        return progress.pages >= props.challengeGoal;
+      }
     });
 
-    syncWithStore(props, $store, session);
+    syncWithStore(props, $store, { session, progress });
 
     return {
       session,
-
-      pagesProgress,
-      bookProgress,
-      bookProgressTotal,
+      progress,
 
       challengeIsCompleted,
     };
@@ -111,22 +114,26 @@ function useSession(state) {
   return { session };
 }
 
-function syncWithStore(props, $store, session) {
+function syncWithStore(props, $store, { session, progress }) {
   const day = props.thatDay;
 
   const commit = (type, key = 'data') => (value) => {
     $store.commit(`month/${type}`, { day, [key]: value });
   };
 
-  const watcher = (source, commitCallback, options = { lazy: true }) =>
-    watch(source, commitCallback, options);
+  const lazyWatch = (source, commitCallback) =>
+    watch(source, commitCallback, { lazy: true });
 
-  watcher(() => session.start, commit(SET_SESSION_START, 'page'));
-  watcher(() => session.end, commit(SET_SESSION_END, 'page'));
-  watcher(() => session.title, commit(SET_SESSION_TITLE, 'title'));
-  watcher(
+  lazyWatch(() => session.start, commit(SET_SESSION_START, 'page'));
+  lazyWatch(() => session.end, commit(SET_SESSION_END, 'page'));
+  lazyWatch(() => session.title, commit(SET_SESSION_TITLE, 'title'));
+  lazyWatch(
     () => session.pagesCount,
     commit(SET_SESSION_PAGES_COUNT, 'pagesCount'),
   );
+  watch(() => progress, commit(SET_SESSION_PROGRESS), {
+    deep: true,
+    lazy: true,
+  });
 }
 </script>
