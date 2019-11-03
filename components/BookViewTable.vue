@@ -10,7 +10,7 @@
     <tbody>
       <tr
         v-for="(book, index) in books"
-        :key="`${book.title}-${index}`"
+        :key="book.title"
         :class="index % 2 ? 'bg-gray-100' : ''"
       >
         <td class="w-8/12 cell" v-text="book.title"></td>
@@ -32,7 +32,7 @@ export default {
 
   computed: {
     books() {
-      return this.$store.state.books.list;
+      return this.$store.state.books;
     },
   },
 };

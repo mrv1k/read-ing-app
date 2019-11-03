@@ -29,7 +29,7 @@ describe('BookViewTable', () => {
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  describe('headers', () => {
+  describe('table headers', () => {
     const factoryStubComputed = (props, overrides) =>
       mount(BookViewTable, {
         computed: { books: () => [] },
@@ -37,15 +37,15 @@ describe('BookViewTable', () => {
         ...overrides,
       });
 
-    it('has 3 rows', () => {
+    it('has 3 headers', () => {
       const wrapper = factoryStubComputed(requiredPropsStub);
 
       const wrappers = wrapper.findAll('th').wrappers;
 
       expect(wrappers.length).toBe(3);
     });
-    // uses prop as header cells text
-    it('fills cells with prop values', () => {
+
+    it('uses props as header text values', () => {
       const props = {
         headers: { title: 'Title', author: 'Author', pages: 'Pages' },
       };
@@ -57,6 +57,7 @@ describe('BookViewTable', () => {
     });
   });
 
+  // FIXME: outdated
   describe('rows', () => {
     const factoryWithComputed = (books = []) =>
       factory({ computed: { books: () => books } });
