@@ -19,16 +19,20 @@
 
 <script>
 import { ref, watch } from '@vue/composition-api';
+import { SET_GOAL } from '../store/mutation-types';
 
 export default {
-  setup(_, { root, emit }) {
+  setup(_, { root }) {
     const goal = ref(25);
 
     // use watching source because vuex doesn't unwrap Ref and it bugs out with jest
-    watch(goal, (goal) => {
-      emit('SET_GOAL', goal);
-      root.$store.commit('challenge/SET_GOAL', goal);
-    });
+    watch(
+      goal,
+      (goal) => {
+        root.$store.commit(`challenge/${SET_GOAL}`, goal);
+      },
+      { lazy: true },
+    );
 
     return {
       goal,

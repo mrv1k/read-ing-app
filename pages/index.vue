@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="step-books">
-      <p>What book are you planning to read?</p>
-    </div>
     <div class="step-challenge">
       <ChallengeSetGoal />
     </div>

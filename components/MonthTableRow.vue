@@ -53,11 +53,6 @@ export default {
       type: Boolean,
       default: false,
     },
-
-    challengeGoal: {
-      type: Number,
-      required: true,
-    },
   },
 
   setup(props, { root, emit }) {
@@ -91,7 +86,7 @@ export default {
 
     const challengeIsCompleted = computed(() => {
       if (progress.pages) {
-        return progress.pages >= props.challengeGoal;
+        return progress.pages >= $store.state.challenge.goal;
       }
     });
 

@@ -19,7 +19,6 @@
         :that-day="thatDay"
         :is-today="isToday(thatDay)"
         :month-name="currentMonth.name"
-        :challenge-goal="challengeGoal"
       />
     </tbody>
   </table>
@@ -32,13 +31,6 @@ import { today, isToday, currentMonth } from '@/utils/dates';
 export default {
   components: {
     MonthTableRow,
-  },
-
-  props: {
-    challengeGoal: {
-      type: Number,
-      required: true,
-    },
   },
 
   computed: {
