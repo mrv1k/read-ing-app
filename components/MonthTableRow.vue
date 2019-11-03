@@ -1,28 +1,31 @@
 <template>
   <tr :class="{ 'border-t-2 border-b-2 border-gray-600': isToday }">
-    <WipTableCell :class="{ 'bg-green-500': challengeIsCompleted }">
+    <MonthTableCell :class="{ 'bg-green-500': challengeIsCompleted }">
       {{ thatDay }}
-    </WipTableCell>
-    <WipTableCell>{{ thatDay }} {{ monthName }}</WipTableCell>
-    <WipTableInput v-model.number="session.start"></WipTableInput>
-    <WipTableInput v-model.number="session.end"></WipTableInput>
-    <WipTableCell>{{ progress.pages }}</WipTableCell>
-    <WipTableInput v-model="session.title" input-class="w-auto"></WipTableInput>
-    <WipTableInput
+    </MonthTableCell>
+    <MonthTableCell>{{ thatDay }} {{ monthName }}</MonthTableCell>
+    <MonthTableInput v-model.number="session.start"></MonthTableInput>
+    <MonthTableInput v-model.number="session.end"></MonthTableInput>
+    <MonthTableCell>{{ progress.pages }}</MonthTableCell>
+    <MonthTableInput
+      v-model="session.title"
+      input-class="w-auto"
+    ></MonthTableInput>
+    <MonthTableInput
       v-model.number="session.pagesCount"
       input-class="w-10"
-    ></WipTableInput>
-    <WipTableCell
+    ></MonthTableInput>
+    <MonthTableCell
       v-text="progress.book ? `${progress.book}%` : ''"
-    ></WipTableCell>
+    ></MonthTableCell>
   </tr>
 </template>
 
 <script>
 import { computed, reactive, watch } from '@vue/composition-api';
 import { percentage } from '@/utils/helpers';
-import WipTableCell from '@/components/WipTableCell.vue';
-import WipTableInput from '@/components/WipTableInput.vue';
+import MonthTableCell from '@/components/MonthTableCell.vue';
+import MonthTableInput from '@/components/MonthTableInput.vue';
 import {
   SET_SESSION_START,
   SET_SESSION_END,
@@ -33,8 +36,8 @@ import {
 
 export default {
   components: {
-    WipTableCell,
-    WipTableInput,
+    MonthTableCell,
+    MonthTableInput,
   },
 
   props: {

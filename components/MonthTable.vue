@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <WipTableRow
+      <MonthTableRow
         v-for="thatDay in currentMonth.daysArray"
         :key="`${currentMonth.name}-${thatDay}`"
         :that-day="thatDay"
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import WipTableRow from '@/components/WipTableRow.vue';
+import MonthTableRow from '@/components/MonthTableRow.vue';
 import { today, isToday, currentMonth } from '@/utils/dates';
 
 export default {
   components: {
-    WipTableRow,
+    MonthTableRow,
   },
 
   props: {

@@ -1,18 +1,18 @@
 <template>
   <div>
     <ChallengeSetGoal @SET_GOAL="recordGoal" />
-    <WipTable :challenge-goal="challengeGoal" />
+    <MonthTable :challenge-goal="challengeGoal" />
   </div>
 </template>
 
 <script>
 import { ref } from '@vue/composition-api';
 import ChallengeSetGoal from '@/components/ChallengeSetGoal.vue';
-import WipTable from '@/components/WipTable.vue';
+import MonthTable from '@/components/MonthTable.vue';
 
 export default {
   components: {
-    WipTable,
+    MonthTable,
     ChallengeSetGoal,
   },
   setup() {
