@@ -7,7 +7,7 @@
       <label for="set-date">A: I commit to read every day starting</label>
       <input
         id="set-date"
-        v-model.number="date"
+        v-model="date"
         class="border focus:outline-none focus:shadow-outline appearance-none leading-normal"
         type="text"
         placeholder="Day"
