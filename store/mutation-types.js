@@ -1,7 +1,9 @@
 // ignored by nuxt
 
-export const SET_GOAL = 'SET_GOAL';
 export const ADD_NEW_BOOK = 'ADD_NEW_BOOK';
+
+export const SET_GOAL = 'SET_GOAL';
+export const SET_START_DATE = 'SET_START_DATE';
 
 export const SET_SESSION_START = 'SET_SESSION_START';
 export const SET_SESSION_END = 'SET_SESSION_END';

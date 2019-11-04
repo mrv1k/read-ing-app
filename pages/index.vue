@@ -2,16 +2,20 @@
   <div>
     <div class="step-challenge">
       <ChallengeSetGoal />
+      <br />
+      <ChallengeSetStartDate />
     </div>
   </div>
 </template>
 
 <script>
 import ChallengeSetGoal from '@/components/ChallengeSetGoal.vue';
+import ChallengeSetStartDate from '@/components/ChallengeSetStartDate.vue';
 
 export default {
   components: {
     ChallengeSetGoal,
+    ChallengeSetStartDate,
   },
 };
 </script>

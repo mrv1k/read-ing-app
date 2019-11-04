@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      Q: How many pages per day do you challenge yourself to read this month?
+      Q: How many pages per day do you challenge yourself to read?
     </p>
     <p>
       <label for="set-goal">A: I commit to read </label>
@@ -10,7 +10,7 @@
         v-model.number="goal"
         class="border-2 w-8 focus:outline-none focus:shadow-outline appearance-none leading-normal"
         type="text"
-        placeholder="322"
+        placeholder="25"
       />
       <label for="set-goal">pages per day </label>
     </p>
