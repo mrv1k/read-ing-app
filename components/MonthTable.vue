@@ -7,9 +7,9 @@
         <th class="border text-left">Start</th>
         <th class="border text-left">End</th>
         <th class="border text-left">Progress</th>
+        <th class="border text-left">Completed %</th>
         <th class="border text-left">Book</th>
         <th class="border text-left">Pages</th>
-        <th class="border text-left">Completed %</th>
       </tr>
     </thead>
     <tbody>

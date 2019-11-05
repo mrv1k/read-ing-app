@@ -9,6 +9,8 @@ import {
   SET_SESSION_PROGRESS,
 } from '@/store/mutation-types';
 
+import devState from '@/dist/dev';
+
 const generatedState = {};
 
 currentMonth.daysArray.forEach((day) => {
@@ -24,7 +26,9 @@ currentMonth.daysArray.forEach((day) => {
   });
 });
 
-const state = () => generatedState;
+const wipState = { ...generatedState, ...devState };
+
+const state = () => wipState;
 
 const mutations = {
   [SET_SESSION_START](state, { day, page }) {

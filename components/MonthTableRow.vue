@@ -7,6 +7,9 @@
     <MonthTableInput v-model.number="session.start"></MonthTableInput>
     <MonthTableInput v-model.number="session.end"></MonthTableInput>
     <MonthTableCell>{{ progress.pages }}</MonthTableCell>
+    <MonthTableCell>{{
+      progress.book ? `${progress.book}%` : ''
+    }}</MonthTableCell>
     <MonthTableInput
       v-model="session.title"
       input-class="w-auto"
@@ -15,9 +18,6 @@
       v-model.number="session.pagesCount"
       input-class="w-10"
     ></MonthTableInput>
-    <MonthTableCell
-      v-text="progress.book ? `${progress.book}%` : ''"
-    ></MonthTableCell>
   </tr>
 </template>
 
@@ -80,9 +80,6 @@ export default {
         }
       }),
     });
-
-    // const progress = { pages: 43, book: 13, bookTotal: 13 };
-    // console.log(progress.pages, progress.book, progress.bookTotal);
 
     const challengeIsCompleted = computed(() => {
       if (progress.pages) {
